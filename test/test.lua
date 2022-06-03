@@ -52,6 +52,7 @@ function testPinfo()
     lu.assertEquals(pinfo.fragmented, true)
 end
 
-local failures = lu.LuaUnit.run()
+print("Starting tests...")
+local failures = lu.LuaUnit.run("--verbose")
 
 if failures > 0 then os.exit(failures) else return 0 end
