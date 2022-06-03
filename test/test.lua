@@ -52,4 +52,6 @@ function testPinfo()
     lu.assertEquals(pinfo.fragmented, true)
 end
 
-return lu.LuaUnit.run()
+local failures = lu.LuaUnit.run()
+
+if failures > 0 then os.exit(failures) else return 0 end
