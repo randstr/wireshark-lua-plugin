@@ -1,0 +1,19 @@
+#
+# Editor configuration
+#
+# http://editorconfig.org/
+#
+
+root = true
+
+[*]
+tab_width = 8
+end_of_line = lf
+insert_final_newline = true
+
+[CMakeLists.txt]
+indent_style = tab
+
+[*.{c,lua}]
+indent_style = space
+indent_size = 4
