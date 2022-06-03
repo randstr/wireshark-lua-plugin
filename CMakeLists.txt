@@ -57,6 +57,7 @@ if(TSHARK_EXECUTABLE)
 
 	add_custom_target(test
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/test
+		COMMAND ${TSHARK_EXECUTABLE} --version
 		COMMAND ${TSHARK_EXECUTABLE} -Xwslua2:test.lua -r empty.pcap
 	)
 endif()
