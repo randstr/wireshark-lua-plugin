@@ -24,7 +24,7 @@ compile:
     - cd wireshark
     - mkdir build
     - cd build
-    - cmake -G Ninja -DENABLE_WERROR=No -DENABLE_CCACHE=Yes ..
+    - cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug -DENABLE_WERROR=No -DENABLE_CCACHE=Yes ..
     - ninja
     - ninja install
     # Build the plugin
