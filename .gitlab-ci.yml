@@ -3,6 +3,7 @@ image: registry.gitlab.com/wireshark/wireshark-containers/ubuntu-dev
 
 variables:
   CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
+  CCACHE_MAXSIZE: "1"
 
 cache:
   paths:
