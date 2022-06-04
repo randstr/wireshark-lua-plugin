@@ -50,16 +50,24 @@ endif()
 find_program(TSHARK_EXECUTABLE tshark
 	HINTS "${Wireshark_INSTALL_PREFIX}/bin"
 )
+add_feature_info(TShark TSHARK_EXECUTABLE "executable to run tests")
 
-add_custom_target(test
-	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/test
-	COMMAND ${TSHARK_EXECUTABLE} -Xwslua2:test.lua -r empty.pcap
-)
+if(TSHARK_EXECUTABLE)
+	message(STATUS "Found tshark: ${TSHARK_EXECUTABLE}")
+
+	add_custom_target(test
+		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/test
+		COMMAND ${TSHARK_EXECUTABLE} --version
+		COMMAND ${TSHARK_EXECUTABLE} -Xwslua2:test.lua -r empty.pcap
+	)
+endif()
 
 find_program(LDOC_EXECUTABLE ldoc)
 add_feature_info(LDoc LDOC_EXECUTABLE "required to build the documentation")
 
 if(LDOC_EXECUTABLE)
+	message(STATUS "Found ldoc: ${LDOC_EXECUTABLE}")
+
 	add_custom_target(docs
 		COMMAND ${LDOC_EXECUTABLE} -d "${CMAKE_BINARY_DIR}/doc" .
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}

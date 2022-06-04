@@ -33,6 +33,7 @@ compile:
     - cd build
     - cmake ..
     - make
+    - make install
     - make test
     - make docs
     - make package
