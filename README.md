@@ -13,6 +13,7 @@ supported by the Wireshark developer team.
 Goals include:
  * Better Lua API
  * Better C code
+ * Better unit testing framework
  * Better user documentation
  * Fix some design flaws and limitations with Lua support in Wireshark 3.6
 
