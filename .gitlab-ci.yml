@@ -1,5 +1,5 @@
 
-image: registry.gitlab.com/wireshark/wireshark-containers/ubuntu-dev
+image: registry.gitlab.com/jvalverde/wireshark-lua-plugin/ubuntu
 
 variables:
   CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
@@ -15,20 +15,7 @@ stages:
 
 compile:
   stage: build
-  before_script:
-    - apt-get -qq update
-    - apt-get -y install lua-ldoc
-    - git clone --depth 1 https://gitlab.com/wireshark/wireshark.git
   script:
-    # Build and install wireshark from the master branch
-    - cd wireshark
-    - mkdir build
-    - cd build
-    - cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug -DENABLE_WERROR=No -DENABLE_CCACHE=Yes ..
-    - ninja
-    - ninja install
-    # Build the plugin
-    - cd $CI_PROJECT_DIR
     - mkdir build
     - cd build
     - cmake ..
