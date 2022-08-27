@@ -222,7 +222,7 @@ static int wl_expert_add_info_format(lua_State *L)
         str = lua_tostring(L, -1);
     }
 
-    expert_add_info_format(pinfo, pi, ei->ids, str);
+    expert_add_info_format(pinfo, pi, ei->ids, "%s", str);
     return 0;
 }
 

@@ -4,9 +4,14 @@
 This is a plugin for Wireshark providing Lua 5.4 bindings to the libwireshark
 API. It allows writing Wireshark dissectors in Lua instead of C.
 
-This is a new experimental alternative to the code using Lua 5.2 that comes
-with Wireshark 3.6. It is an external project to Wireshark and not officially
-supported by the Wireshark developer team.
+It was written from scratch as an experimental alternative to the code using
+Lua 5.2 that comes with Wireshark 3.6.
+
+This is an external project to Wireshark and not officially supported by the
+Wireshark developer team.
+
+The [API documentation](https://jvalverde.gitlab.io/wireshark-lua-plugin) is
+still a work in progress.
 
 ## Goals and non-goals
 
