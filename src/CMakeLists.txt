@@ -42,7 +42,7 @@ add_custom_target(copy_plugin
 	COMMENT "Installing plugin to: ${Wireshark_PLUGIN_INSTALL_DIR}"
 )
 
-string(TOLOWER "${PROJECT_NAME}-${PROJECT_VERSION}" _pkgname)
+string(TOLOWER "wireshark-${Wireshark_MAJOR_VERSION}.${Wireshark_MINOR_VERSION}-lua-plugin-${PROJECT_VERSION}" _pkgname)
 
 add_custom_target(package_prep
 	COMMAND ${CMAKE_COMMAND} -E make_directory  ${CMAKE_BINARY_DIR}/${_pkgname}

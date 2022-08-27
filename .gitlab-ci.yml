@@ -41,7 +41,7 @@ compile:
     - ccache --show-stats
   artifacts:
     paths:
-      - build/wireshark-lua-plugin-*.tar.gz
+      - build/wireshark-*-lua-plugin-*.tar.gz
       - build/doc
 
 pages:
