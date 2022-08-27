@@ -1,14 +1,6 @@
 
 image: registry.gitlab.com/jvalverde/wireshark-lua-plugin/ubuntu
 
-variables:
-  CCACHE_DIR: "${CI_PROJECT_DIR}/ccache"
-  CCACHE_MAXSIZE: "1"
-
-cache:
-  paths:
-    - ccache
-
 stages:
   - build
   - deploy
@@ -24,8 +16,6 @@ compile:
     - make test
     - make docs
     - make package
-  after_script:
-    - ccache --show-stats
   artifacts:
     paths:
       - build/wireshark-*-lua-plugin-*.tar.gz
