@@ -58,7 +58,7 @@ add_library(lua STATIC ${LUA_SRC})
 
 target_compile_definitions(lua PUBLIC
 	${LUA_DEFINITIONS}
-	$<$<BOOL:USE_READLINE>:LUA_USE_READLINE>
+	$<$<BOOL:${USE_READLINE}>:LUA_USE_READLINE>
 	LUA_ROOT=\"${Wireshark_INSTALL_PREFIX}/\"
 )
 
@@ -69,5 +69,5 @@ target_include_directories(lua INTERFACE
 target_link_libraries(lua PUBLIC
 	${LUA_LINK_FLAGS}
 	$<$<BOOL:UNIX>:m>
-	$<$<BOOL:USE_READLINE>:-lreadline>
+	$<$<BOOL:${USE_READLINE}>:-lreadline>
 )
