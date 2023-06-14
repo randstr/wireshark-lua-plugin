@@ -54,13 +54,15 @@ add_custom_target(package_prep
 )
 
 add_custom_target(package
-	COMMAND ${CMAKE_COMMAND} -E tar czf ${CMAKE_BINARY_DIR}/${_pkgname}.tar.gz --format=gnutar -- ${CMAKE_BINARY_DIR}/${_pkgname}
+	COMMAND ${CMAKE_COMMAND} -E tar czf ${_pkgname}.tar.gz --format=gnutar -- ${_pkgname}
+	COMMAND ${CMAKE_COMMAND} -E sha256sum ${_pkgname}.tar.gz > ${_pkgname}.tar.gz.sha256sum.txt
 	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 add_dependencies(package package_prep)
 
 add_custom_target(package_zip
-	COMMAND ${CMAKE_COMMAND} -E tar cf ${CMAKE_BINARY_DIR}/${_pkgname}.zip --format=zip -- ${CMAKE_BINARY_DIR}/${_pkgname}
+	COMMAND ${CMAKE_COMMAND} -E tar cf ${_pkgname}.zip --format=zip -- ${_pkgname}
+	COMMAND ${CMAKE_COMMAND} -E sha256sum ${_pkgname}.zip > ${_pkgname}.zip.sha256sum.txt
 	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 add_dependencies(package_zip package_prep)
