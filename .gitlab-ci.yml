@@ -67,19 +67,16 @@ upload:
     WIRESHARK_VERSION: "4.1"
   stage: upload
   image: curlimages/curl:latest
-#  rules:
-#    - if: $CI_COMMIT_TAG
+  rules:
+    - if: $CI_COMMIT_TAG
   dependencies:
     - compile-gcc
     - compile-mingw
   script:
     - |
       curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file build/${LINUX_AMD64_BINARY} "${PACKAGE_REGISTRY_URL}/${LINUX_AMD64_BINARY}"
-    - |
       curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file build/${LINUX_AMD64_SHA256} "${PACKAGE_REGISTRY_URL}/${LINUX_AMD64_SHA256}"
-    - |
       curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file build/${WINDOWS_AMD64_BINARY} "${PACKAGE_REGISTRY_URL}/${WINDOWS_AMD64_BINARY}"
-    - |
       curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file build/${WINDOWS_AMD64_SHA256} "${PACKAGE_REGISTRY_URL}/${WINDOWS_AMD64_SHA256}"
   only:
     - main
