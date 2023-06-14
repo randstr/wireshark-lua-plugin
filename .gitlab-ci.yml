@@ -1,11 +1,12 @@
 
-image: registry.gitlab.com/jvalverde/wireshark-lua-plugin/wireshark-ubuntu-dev
+
 
 stages:
   - build
   - deploy
 
-compile:
+compile-gcc:
+  image: registry.gitlab.com/jvalverde/wireshark-lua-plugin/wireshark-ubuntu-dev
   stage: build
   script:
     - mkdir build
@@ -21,10 +22,23 @@ compile:
       - build/wireshark-*-lua-plugin-*.tar.gz
       - build/doc
 
+compile-mingw:
+  image: registry.gitlab.com/jvalverde/wireshark-lua-plugin/wireshark-mingw-dev
+  stage: build
+  script:
+    - mkdir build
+    - cd build
+    - Wireshark_DIR=/opt/wireshark/cmake mingw64-cmake ..
+    - make
+    - make package_zip
+  artifacts:
+    paths:
+      - build/wireshark-*-lua-plugin-*.zip
+
 pages:
   stage: deploy
   dependencies:
-    - compile
+    - compile-gcc
   script:
     - mv build/doc public/
   artifacts:
