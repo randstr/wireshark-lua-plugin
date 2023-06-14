@@ -1,5 +1,5 @@
 
-image: registry.gitlab.com/jvalverde/wireshark-lua-plugin/ubuntu
+image: registry.gitlab.com/jvalverde/wireshark-lua-plugin/wireshark-ubuntu-dev
 
 stages:
   - build
