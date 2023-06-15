@@ -52,7 +52,7 @@ endif()
 
 add_library(lua STATIC ${LUA_SRC})
 
-target_compile_definitions(lua PUBLIC
+target_compile_definitions(lua PRIVATE
 	${LUA_DEFINITIONS}
 	$<$<BOOL:${USE_READLINE}>:LUA_USE_READLINE>
 	LUA_ROOT=\"${Wireshark_INSTALL_PREFIX}/\"
@@ -62,7 +62,7 @@ target_include_directories(lua INTERFACE
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
 )
 
-target_link_libraries(lua PUBLIC
+target_link_libraries(lua PRIVATE
 	${LUA_LINK_FLAGS}
 	$<$<BOOL:UNIX>:m>
 	$<$<BOOL:${USE_READLINE}>:-lreadline>
