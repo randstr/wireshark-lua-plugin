@@ -37,7 +37,7 @@ set(LUA_SRC
 
 set(LUA_DEFINITIONS)
 set(LUA_LINK_FLAGS)
-set(USE_READLINE False)
+option(USE_READLINE OFF "Use readline with Lua REPL")
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 	list(APPEND LUA_DEFINITIONS LUA_USE_LINUX)
@@ -48,10 +48,6 @@ elseif(UNIX)
 	list(APPEND LUA_DEFINITIONS LUA_USE_POSIX)
 #	list(APPEND LUA_DEFINITIONS LUA_USE_DLOPEN)
 #	list(APPEND LUA_LINK_FLAGS -ldl)
-endif()
-
-if(UNIX)
-	set(USE_READLINE True)
 endif()
 
 add_library(lua STATIC ${LUA_SRC})
