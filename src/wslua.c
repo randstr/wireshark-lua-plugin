@@ -88,7 +88,7 @@ static void l_dofile(lua_State *L, const char *file,
         path = g_build_filename(data_path, file, (char *)NULL);
     else
         path = g_strdup(file);
-    if (ignore_missing && (g_access(path, F_OK) != 0))
+    if (ignore_missing && access(path, F_OK) != 0)
         skip = TRUE;
     else
         err = luaL_loadfilex(L, path, "t");

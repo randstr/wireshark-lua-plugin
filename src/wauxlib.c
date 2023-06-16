@@ -17,6 +17,7 @@
 
 #include "wauxlib.h"
 
+#include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
 
@@ -53,7 +54,7 @@ void luaW_argerrorf(lua_State *L, int arg, const char *fmt, ...)
     char buf[64];
 
     va_start(args, fmt);
-    g_vsnprintf(buf, 64, fmt, args);
+    vsnprintf(buf, 64, fmt, args);
     va_end(args);
     luaL_argerror(L, arg, buf);
     abort(); //not reached

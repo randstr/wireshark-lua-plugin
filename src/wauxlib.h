@@ -19,7 +19,6 @@
 #define __WAUXLIB_H__
 
 #include <glib.h>
-#include <glib/gstdio.h>
 
 #include "../lua/src/lua.h"
 #include "../lua/src/lualib.h"
