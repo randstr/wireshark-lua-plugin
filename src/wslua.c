@@ -19,6 +19,8 @@
 #include "wslua.h"
 
 #include <unistd.h>
+#include <sys/types.h>
+#include <dirent.h>
 
 #include <epan/exceptions.h>
 #include <epan/ex-opt.h>
@@ -244,7 +246,8 @@ void load_lua_module(lua_State *L, const char *name)
 void wslua2_init(void)
 {
     lua_State *L;
-    GDir *dir;
+    DIR *dir;
+    struct dirent *entry;
     const char *name;
 
     L = g_lua = lua_newstate(l_alloc, NULL);
@@ -261,17 +264,18 @@ void wslua2_init(void)
     /* Lua has no granularity for file errors. We want to be quiet if
      * 'init.lua' doesn't exist (and only then) */
     l_dofile(L, "init.lua", TRUE, TRUE);
-    dir = g_dir_open(data_path, 0, NULL);
+    dir = opendir(data_path);
     if (dir == NULL) {
         /* should not happen */
         return;
     }
-    while((name = g_dir_read_name(dir)) != NULL) {
+    while((entry = readdir(dir)) != NULL) {
+        name = entry->d_name;
         if (g_str_has_suffix(name, ".lua") && strcmp(name, "init.lua") != 0) {
             load_lua_module(L, name);
         }
     }
-    g_dir_close(dir);
+    closedir(dir);
 }
 
 void wslua2_post_init(void)
