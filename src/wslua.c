@@ -94,19 +94,23 @@ static int l_panic(lua_State *L)
 static void l_dofile(lua_State *L, const char *file,
                         gboolean use_datapath, gboolean ignore_missing)
 {
-    char *path;
+    const char *path;
+    char path_buf[1024];
     int err;
     gboolean skip = FALSE;
 
-    if (use_datapath)
-        path = g_build_filename(data_path, file, (char *)NULL);
-    else
-        path = g_strdup(file);
+    if (use_datapath) {
+        snprintf(path_buf, sizeof(path_buf), "%s/%s", data_path, file);
+        path = path_buf;
+    }
+    else {
+        path = file;
+    }
     if (ignore_missing && access(path, F_OK) != 0)
         skip = TRUE;
     else
         err = luaL_loadfilex(L, path, "t");
-    g_free(path);
+
     if (!skip) {
         if (err != LUA_OK) {
             lua_error(L);
