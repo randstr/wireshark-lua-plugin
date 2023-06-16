@@ -18,8 +18,6 @@
 #ifndef _WSLUA2_ENUMS_H
 #define _WSLUA2_ENUMS_H
 
-#include <glib.h>
-
 #include "../lua/src/lua.h"
 #include "../lua/src/lualib.h"
 #include "../lua/src/lauxlib.h"

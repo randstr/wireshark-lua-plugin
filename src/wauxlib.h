@@ -18,8 +18,6 @@
 #ifndef __WAUXLIB_H__
 #define __WAUXLIB_H__
 
-#include <glib.h>
-
 #include "../lua/src/lua.h"
 #include "../lua/src/lualib.h"
 #include "../lua/src/lauxlib.h"

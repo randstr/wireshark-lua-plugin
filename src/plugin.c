@@ -19,7 +19,6 @@
 #include "config.h"
 #endif
 
-#include <glib.h>
 #include <epan/epan.h>
 #include <ws_version.h>
 #include "wslua.h"

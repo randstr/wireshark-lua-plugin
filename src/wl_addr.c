@@ -206,7 +206,7 @@ static int wl_addr_new(lua_State *L)
         return luaL_error(L, "Unknown address value %s", badarg);
     }
 
-    addr = g_new(address, 1);
+    addr = wmem_new(NULL, address);
     alloc_address_wmem(NULL, addr, addr_type, addr_size, &addr_data);
     luaW_push_addr(L, addr);
     return 1;

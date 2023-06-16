@@ -69,10 +69,10 @@ static bool str_has_suffix(const char *str, const char *suffix)
 static void *l_alloc (void *ud _U_, void *ptr, size_t osize _U_, size_t nsize)
 {
     if (nsize == 0) {
-        g_free(ptr);
+        free(ptr);
         return NULL;
     }
-    void *p = g_realloc(ptr, nsize);
+    void *p = realloc(ptr, nsize);
     if (!p) {
         fprintf(stderr, "Out of memory error\n");
         abort();
@@ -137,7 +137,7 @@ static int wl_dofile(lua_State *L)
 static int wl_in_cksum(lua_State *L)
 {
     int nargs = lua_gettop(L);
-    vec_t *p = g_new(vec_t, nargs);
+    vec_t *p = malloc(nargs * sizeof(vec_t));
     const char *s;
     size_t len;
 
@@ -147,7 +147,7 @@ static int wl_in_cksum(lua_State *L)
         p[i].len = len;
     }
     int result = in_cksum(p, nargs);
-    g_free(p);
+    free(p);
     lua_pushinteger(L, result);
     return 1;
 }
@@ -333,6 +333,6 @@ void wslua2_cleanup(void)
         lua_close(g_lua);
     g_lua = NULL;
     if (data_path)
-        g_free(data_path);
+        wmem_free(NULL, data_path);
     data_path = NULL;
 }

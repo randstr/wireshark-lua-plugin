@@ -529,7 +529,7 @@ static int wl_offset_tostring(lua_State *L)
 static int wl_offset_gc(lua_State *L)
 {
     struct wl_offset *off = luaW_check_offset(L, 1);
-    g_free(off);
+    free(off);
     return 0;
 }
 
@@ -542,7 +542,7 @@ static int wl_offset_gc(lua_State *L)
 static int wl_offset_new(lua_State *L)
 {
     lua_Integer start = luaL_optinteger(L, 1, 0);
-    struct wl_offset *off = g_new(struct wl_offset, 1);
+    struct wl_offset *off = malloc(sizeof(struct wl_offset));
     off->curr = start;
     off->step = 0;
     luaW_push_offset(L, off);
@@ -614,7 +614,7 @@ static int wl_proto_register_subtree_array(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TTABLE);
 
-    int *index = g_new(int, 1);
+    int *index = malloc(sizeof(int));
 
     lua_pushnil(L);
     while (lua_next(L, 1) != 0) {
@@ -628,7 +628,7 @@ static int wl_proto_register_subtree_array(lua_State *L)
         lua_settable(L, 1); /* ett.name = id */
     }
 
-    g_free(index);
+    free(index);
     return 1;
 }
 
