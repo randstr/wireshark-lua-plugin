@@ -77,12 +77,12 @@ build() {
   "${MINGW_PREFIX}"/bin/cmake.exe --build .
 }
 
-#check() {
-#  cd "${srcdir}/build-${MSYSTEM}"
-#
-#  "${MINGW_PREFIX}"/bin/cmake.exe --build . --target test-programs
-#  "${MINGW_PREFIX}"/bin/pytest.exe
-#}
+check() {
+  cd "${srcdir}/build-${MSYSTEM}"
+
+  "${MINGW_PREFIX}"/bin/cmake.exe --build . --target test-programs
+  "${MINGW_PREFIX}"/bin/pytest.exe --skip-missing-programs=wireshark
+}
 
 package() {
   cd "${srcdir}/build-${MSYSTEM}"
