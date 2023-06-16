@@ -1,0 +1,42 @@
+name: MSYS2
+
+on: [push]
+
+jobs:
+  msys2-ucrt64:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: base-devel
+      - name: Install TShark
+        run: |
+          cd test-aux/mingw64-wireshark-cli
+          makepkg-mingw --cleanbuild --syncdeps --force --install --noconfirm
+      - name: Show version
+        run: |
+          tshark.exe --version
+      - name: Build Lua plugin
+        run: |
+          mkdir build && cd build
+          cmake ..
+          ninja
+          ninja test
+          ninja install
+          ninja package_zip
+      - name: Show plugins
+        run: |
+          tshark.exe -G plugins
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: package
+          path: |
+            build/wireshark-*-lua-plugin-*.zip
+            build/wireshark-*-lua-plugin-*.zip.sha256sum.txt
