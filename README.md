@@ -40,12 +40,13 @@ To build the plugin:
     $ make
     $ make docs
 
-To install the plugin to use with Wireshark you may need to use sudo or run
-as root. To run the tests you need to install the plugin first because the
-test suite uses the tshark binary:
+To run the tests:
+
+    $ make test
+
+To install the plugin on the system (may need to use sudo):
 
     $ make install
-    $ make test
 
 ## Loading Lua scripts
 

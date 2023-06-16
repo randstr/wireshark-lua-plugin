@@ -54,11 +54,41 @@ add_feature_info(TShark TSHARK_EXECUTABLE "executable to run tests")
 
 if(TSHARK_EXECUTABLE)
 	message(STATUS "Found tshark: ${TSHARK_EXECUTABLE}")
+	cmake_path(CONVERT  "${CMAKE_BINARY_DIR}/_config" TO_NATIVE_PATH_LIST  _config_dir)
+	cmake_path(CONVERT  "${CMAKE_BINARY_DIR}/_plugins" TO_NATIVE_PATH_LIST  _plugin_dir)
+	cmake_path(CONVERT  "${_plugin_dir}/${Wireshark_MAJOR_VERSION}.${Wireshark_MINOR_VERSION}/epan" TO_NATIVE_PATH_LIST  _target_dir)
 
+	# Change Wireshark environment to load plugins from the build directory.
+	# XXX Is there a way to avoid all the repetitive environment configuration for each tshark command?
 	add_custom_target(test
 		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/test
-		COMMAND ${TSHARK_EXECUTABLE} --version
-		COMMAND ${TSHARK_EXECUTABLE} -Xwslua2:test.lua -r empty.pcap
+		COMMAND ${CMAKE_COMMAND} -E make_directory ${_config_dir}
+		COMMAND ${CMAKE_COMMAND} -E make_directory ${_target_dir}
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:plugin> ${_target_dir}
+		COMMAND ${CMAKE_COMMAND} -E echo "### Version ###"
+		COMMAND ${CMAKE_COMMAND} -E env
+			HOME="/nonexistant"
+			WIRESHARK_CONFIG_DIR=${_config_dir}
+			WIRESHARK_PLUGIN_DIR=${_plugin_dir}
+			${TSHARK_EXECUTABLE} --version
+			COMMAND ${CMAKE_COMMAND} -E echo "### Folders ###"
+		COMMAND ${CMAKE_COMMAND} -E env
+			HOME="/nonexistant"
+			WIRESHARK_CONFIG_DIR=${_config_dir}
+			WIRESHARK_PLUGIN_DIR=${_plugin_dir}
+			${TSHARK_EXECUTABLE} -G folders
+			COMMAND ${CMAKE_COMMAND} -E echo "### Plugins ###"
+		COMMAND ${CMAKE_COMMAND} -E env
+			HOME="/nonexistant"
+			WIRESHARK_CONFIG_DIR=${_config_dir}
+			WIRESHARK_PLUGIN_DIR=${_plugin_dir}
+			${TSHARK_EXECUTABLE} -G plugins
+		COMMAND ${CMAKE_COMMAND} -E echo ""
+		COMMAND ${CMAKE_COMMAND} -E env
+			HOME="/nonexistant"
+			WIRESHARK_CONFIG_DIR=${_config_dir}
+			WIRESHARK_PLUGIN_DIR=${_plugin_dir}
+			${TSHARK_EXECUTABLE} -Xwslua2:test.lua -r empty.pcap
 	)
 endif()
 
