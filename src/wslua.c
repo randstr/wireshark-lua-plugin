@@ -52,6 +52,20 @@ static gchar *data_path = NULL;
 int luaopen_rex_pcre2(lua_State *L);
 #endif
 
+static bool str_has_suffix(const char *str, const char *suffix)
+{
+    size_t l1 = strlen(str);
+    size_t l2 = strlen(suffix);
+    if (l1 < l2)
+        return false;
+    while (l2 > 0) {
+        if (suffix[--l2] != str[--l1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 static void *l_alloc (void *ud _U_, void *ptr, size_t osize _U_, size_t nsize)
 {
     if (nsize == 0) {
@@ -271,7 +285,7 @@ void wslua2_init(void)
     }
     while((entry = readdir(dir)) != NULL) {
         name = entry->d_name;
-        if (g_str_has_suffix(name, ".lua") && strcmp(name, "init.lua") != 0) {
+        if (str_has_suffix(name, ".lua") && strcmp(name, "init.lua") != 0) {
             load_lua_module(L, name);
         }
     }
