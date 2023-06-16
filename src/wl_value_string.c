@@ -55,10 +55,10 @@ static int wl_value_string_new(lua_State *L)
 
     luaL_checktype(L, 1, LUA_TTABLE);
     int len = luaL_len(L, 1);
-    GArray *vs_array = g_array_sized_new(FALSE, FALSE, sizeof(value_string), len);
+    value_string *vs_array = wmem_alloc0_array(NULL, value_string, len + 1);
 
     lua_pushnil(L);
-    for (int i = 0; lua_next(L, 1) != 0; i++) {
+    for (int i = 0; lua_next(L, 1) != 0 && i < len; i++) {
         luaL_checktype(L, -1, LUA_TTABLE);
         lua_geti(L, -1, 1);
         value = lua_tointeger(L, -1);
@@ -67,16 +67,13 @@ static int wl_value_string_new(lua_State *L)
 
         vs.value = value;
         vs.strptr = wmem_strdup(NULL, strptr);
-        g_array_append_val(vs_array, vs);
+        vs_array[i] = vs;
         lua_pop(L, 3);
     }
-    vs.value = 0;
-    vs.strptr = NULL;
-    g_array_append_val(vs_array, vs);
-    
+
     struct wl_value_string *lvalstr = wmem_new(NULL, struct wl_value_string);
     lvalstr->type = WL_VALS;
-    lvalstr->data.vals = (value_string *)g_array_free(vs_array, FALSE);
+    lvalstr->data.vals = vs_array;
     luaW_push_value_string(L, lvalstr);
     return 1;
 }
