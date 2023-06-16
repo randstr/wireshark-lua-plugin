@@ -55,4 +55,7 @@ end
 print("Starting tests...")
 local failures = lu.LuaUnit.run("--verbose")
 
+-- os.exit() will terminate the tshark process. We should do this cleanly
+-- but there is no obvious way to make tshark exit cleanly with an
+-- error code from an extension option.
 if failures > 0 then os.exit(failures) else return 0 end
