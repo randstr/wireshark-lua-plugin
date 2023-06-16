@@ -21,7 +21,7 @@
 #include <epan/address.h>
 #include <epan/ftypes/ftypes.h>
 
-guint32 luaW_check_ipv4(lua_State *L, int arg);
+uint32_t luaW_check_ipv4(lua_State *L, int arg);
 
 struct e_in6_addr *luaW_check_ipv6(lua_State *L, int arg);
 
@@ -29,7 +29,7 @@ address *luaW_check_addr(lua_State *L, int arg);
 
 address_type luaW_check_address_type(lua_State *L, int arg);
 
-void luaW_push_ipv4(lua_State *L, guint32 ip4);
+void luaW_push_ipv4(lua_State *L, uint32_t ip4);
 
 void luaW_push_ipv6(lua_State *L, const struct e_in6_addr *ip6);
 

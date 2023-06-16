@@ -39,16 +39,16 @@ void luaW_push_tvbuff(lua_State *L, tvbuff_t *tvb)
  */
 
 /***
- * Get a guint8 from a tvbuff
+ * Get a uint8_t from a tvbuff
  * @function uint8
  * @int offset the offset
- * @treturn int a guint8
+ * @treturn int a uint8_t
  */
 static int wl_tvb_get_guint8(lua_State *L)
 {
     tvbuff_t *tvb = luaW_check_tvbuff(L, 1);
-    gint offset = luaW_check_offset_toint(L, 2);
-    guint8 val = tvb_get_guint8(tvb, offset);
+    int offset = luaW_check_offset_toint(L, 2);
+    uint8_t val = tvb_get_guint8(tvb, offset);
     lua_pushinteger(L, val);
     return 1;
 }
@@ -56,8 +56,8 @@ static int wl_tvb_get_guint8(lua_State *L)
 static int wl_tvb_get_ntohs(lua_State *L)
 {
     tvbuff_t *tvb = luaW_check_tvbuff(L, 1);
-    gint offset = luaW_check_offset_toint(L, 2);
-    guint16 val = tvb_get_ntohs(tvb, offset);
+    int offset = luaW_check_offset_toint(L, 2);
+    uint16_t val = tvb_get_ntohs(tvb, offset);
     lua_pushinteger(L, val);
     return 1;
 }
@@ -73,7 +73,7 @@ static int wl_tvb_get_bytes(lua_State *L)
     else if (length < 0) {
         luaL_error(L, "length must be positive or -1, was %d", length);
     }
-    const guint8 *ptr = tvb_get_ptr(tvb, offset, length);
+    const uint8_t *ptr = tvb_get_ptr(tvb, offset, length);
     lua_pushlstring(L, (const char *)ptr, length);
     return 1;
 }
@@ -87,8 +87,8 @@ static int wl_tvb_get_bytes(lua_State *L)
 static int wl_tvb_get_ipv4(lua_State *L)
 {
     tvbuff_t *tvb = luaW_check_tvbuff(L, 1);
-    gint offset = luaW_check_offset_toint(L, 2);
-    guint32 val = tvb_get_ipv4(tvb, offset);
+    int offset = luaW_check_offset_toint(L, 2);
+    uint32_t val = tvb_get_ipv4(tvb, offset);
     luaW_push_ipv4(L, val);
     return 1;
 }
@@ -102,7 +102,7 @@ static int wl_tvb_get_ipv4(lua_State *L)
 static int wl_tvb_get_ipv6(lua_State *L)
 {
     tvbuff_t *tvb = luaW_check_tvbuff(L, 1);
-    gint offset = luaW_check_offset_toint(L, 2);
+    int offset = luaW_check_offset_toint(L, 2);
     struct e_in6_addr val;
     tvb_get_ipv6(tvb, offset, &val);
     luaW_push_ipv6(L, &val);
@@ -117,7 +117,7 @@ static int wl_tvb_get_ipv6(lua_State *L)
 static int wl_tvb_captured_length(lua_State *L)
 {
     tvbuff_t *tvb = luaW_check_tvbuff(L, 1);
-    guint length = tvb_captured_length(tvb);
+    unsigned length = tvb_captured_length(tvb);
     lua_pushinteger(L, length);
     return 1;
 }
@@ -130,7 +130,7 @@ static int wl_tvb_captured_length(lua_State *L)
 static int wl_tvb_reported_length(lua_State *L)
 {
     tvbuff_t *tvb = luaW_check_tvbuff(L, 1);
-    guint length = tvb_reported_length(tvb);
+    unsigned length = tvb_reported_length(tvb);
     lua_pushinteger(L, length);
     return 1;
 }
@@ -144,7 +144,7 @@ static int wl_tvb_reported_length(lua_State *L)
 static int wl_tvb_new_subset_remaining(lua_State *L)
 {
     tvbuff_t *backing = luaW_check_tvbuff(L, 1);
-    gint backing_offset = luaW_check_offset_toint(L, 2);
+    int backing_offset = luaW_check_offset_toint(L, 2);
     tvbuff_t *tvb = tvb_new_subset_remaining(backing, backing_offset);
     luaW_push_tvbuff(L, tvb);
     return 1;
@@ -157,7 +157,7 @@ static int wl_tvb_new_real_data(lua_State *L)
     lua_Integer reported_length = lua_tointeger(L, 2);
 
     /* removes terminating null from data */
-    tvbuff_t *tvb = tvb_new_real_data((guint8 *)data, length, reported_length);
+    tvbuff_t *tvb = tvb_new_real_data((uint8_t *)data, length, reported_length);
     luaW_push_tvbuff(L, tvb);
     return 1; 
 }

@@ -79,9 +79,9 @@ void luaW_push_hf_register_info(lua_State *L, hf_register_info *hf)
     *ptr = hf;
 }
 
-guint luaW_opt_encoding(lua_State *L, int arg)
+unsigned luaW_opt_encoding(lua_State *L, int arg)
 {
-    guint encoding = luaL_optinteger(L, arg, ENC_BIG_ENDIAN); /* XXX: Use ENC_NA instead */
+    unsigned encoding = luaL_optinteger(L, arg, ENC_BIG_ENDIAN); /* XXX: Use ENC_NA instead */
     return encoding;
 }
 
@@ -350,23 +350,23 @@ static int wl_prototree_add_item_ret(lua_State *L)
         lua_pushboolean(L, retval);
     }
     else if (IS_FT_INT32(type)){
-        gint32 retval;
+        int32_t retval;
         item = proto_tree_add_item_ret_int(tree, *(hf->p_id), tvb, off->curr, length, encoding, &retval);
         lua_pushinteger(L, retval);
     }
     else if (IS_FT_UINT32(type)){
-        guint32 retval;
+        uint32_t retval;
         item = proto_tree_add_item_ret_uint(tree, *(hf->p_id), tvb, off->curr, length, encoding, &retval);
         lua_pushinteger(L, retval);
     }
     else if (IS_FT_UINT64(type)){
-        guint64 retval;
+        uint64_t retval;
         item = proto_tree_add_item_ret_uint64(tree, *(hf->p_id), tvb, off->curr, length, encoding, &retval);
         lua_pushinteger(L, retval);
     }
     else if (IS_FT_STRING(type)) {
-        guint8 *retval;
-        item = proto_tree_add_item_ret_string(tree, *(hf->p_id), tvb, off->curr, length, encoding, NULL, (const guint8 **)&retval);
+        uint8_t *retval;
+        item = proto_tree_add_item_ret_string(tree, *(hf->p_id), tvb, off->curr, length, encoding, NULL, (const uint8_t **)&retval);
         lua_pushstring(L, (char *)retval);
         wmem_free(NULL, retval);
     }

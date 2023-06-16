@@ -21,9 +21,9 @@
  * @module wireshark
  */
 
-guint32 luaW_check_ipv4(lua_State *L, int arg)
+uint32_t luaW_check_ipv4(lua_State *L, int arg)
 {
-    guint32 *ptr = luaL_checkudata(L, arg, "wslua.IPv4");
+    uint32_t *ptr = luaL_checkudata(L, arg, "wslua.IPv4");
     return *ptr;
 }
 
@@ -39,9 +39,9 @@ address *luaW_check_addr(lua_State *L, int arg)
     return ptr;
 }
 
-void luaW_push_ipv4(lua_State *L, guint32 ip4)
+void luaW_push_ipv4(lua_State *L, uint32_t ip4)
 {
-    guint32 *ptr = NEWUSERDATA(L, guint32, "wslua.IPv4");
+    uint32_t *ptr = NEWUSERDATA(L, uint32_t, "wslua.IPv4");
     *ptr = ip4;
 }
 
@@ -81,8 +81,8 @@ address_type ftenum_to_addr_type(enum ftenum ft)
  */
 static int wl_ipv4_tostring(lua_State *L)
 {
-    guint32 ip4 = luaW_check_ipv4(L, 1);
-    gchar buf[32];
+    uint32_t ip4 = luaW_check_ipv4(L, 1);
+    char buf[32];
     ws_inet_ntop4(&ip4, buf, sizeof(buf));
     lua_pushstring(L, buf);
     return 1;
@@ -100,7 +100,7 @@ static int wl_ipv4_tostring(lua_State *L)
 static int wl_ipv6_tostring(lua_State *L)
 {
     const struct e_in6_addr *ip6 = luaW_check_ipv6(L, 1);
-    gchar buf[WS_INET6_ADDRSTRLEN];
+    char buf[WS_INET6_ADDRSTRLEN];
     ws_inet_ntop4(ip6, buf, sizeof(buf));
     lua_pushstring(L, buf);
     return 1;
@@ -118,7 +118,7 @@ static int wl_ipv6_tostring(lua_State *L)
 static int wl_addr_tostring(lua_State *L)
 {
     address *addr = luaW_check_addr(L, 1);
-    gchar buf[64];
+    char buf[64];
     address_to_str_buf(addr, buf, sizeof(buf));
     lua_pushstring(L, buf);
     return 1;
@@ -164,9 +164,9 @@ static int wl_addr_ipv6(lua_State *L)
 static int wl_addr_new(lua_State *L)
 {
     address_type addr_type;
-    gsize addr_size;
+    size_t addr_size;
     union {
-        guint32 ip4;
+        uint32_t ip4;
         struct e_in6_addr ip6;
     } addr_data;
     address *addr;
@@ -191,8 +191,8 @@ static int wl_addr_new(lua_State *L)
 
     if (luaL_testudata(L, -1, "wslua.IPv4")) {
         addr_type = AT_IPv4;
-        addr_size = sizeof(guint32);
-        guint32 ip4 = luaW_check_ipv4(L, -1);
+        addr_size = sizeof(uint32_t);
+        uint32_t ip4 = luaW_check_ipv4(L, -1);
         memcpy(&addr_data.ip4, &ip4, addr_size);
     }
     else if (luaL_testudata(L, -1, "wslua.IPv6")) {

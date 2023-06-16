@@ -46,7 +46,7 @@
 
 lua_State *g_lua = NULL;
 
-static gchar *data_path = NULL;
+static char *data_path = NULL;
 
 #ifdef HAVE_PCRE2
 int luaopen_rex_pcre2(lua_State *L);
@@ -92,12 +92,12 @@ static int l_panic(lua_State *L)
 }
 
 static void l_dofile(lua_State *L, const char *file,
-                        gboolean use_datapath, gboolean ignore_missing)
+                        bool use_datapath, bool ignore_missing)
 {
     const char *path;
     char path_buf[1024];
     int err;
-    gboolean skip = FALSE;
+    bool skip = false;
 
     if (use_datapath) {
         snprintf(path_buf, sizeof(path_buf), "%s/%s", data_path, file);
@@ -107,7 +107,7 @@ static void l_dofile(lua_State *L, const char *file,
         path = file;
     }
     if (ignore_missing && access(path, F_OK) != 0)
-        skip = TRUE;
+        skip = true;
     else
         err = luaL_loadfilex(L, path, "t");
 
@@ -130,7 +130,7 @@ static void l_dofile(lua_State *L, const char *file,
 static int wl_dofile(lua_State *L)
 {
     const char *file = luaL_checkstring(L, 1);
-    l_dofile(L, file, TRUE, FALSE);
+    l_dofile(L, file, true, false);
     return lua_gettop(L) - 1; /* ignore string argument */
 }
 
@@ -143,7 +143,7 @@ static int wl_in_cksum(lua_State *L)
 
     for (int i = 0; i < nargs; i++) {
         s = lua_tolstring(L, i+1, &len);
-        p[i].ptr = (const guint8 *)s;
+        p[i].ptr = (const uint8_t *)s;
         p[i].len = len;
     }
     int result = in_cksum(p, nargs);
@@ -167,7 +167,7 @@ static int l_luaopen_wireshark(lua_State *L)
     lua_newtable(L);
     lua_setfield(L, 2, TABLE_REGISTER_HANDOFF);
 
-    data_path = get_persconffile_path("wslua2", FALSE);
+    data_path = get_persconffile_path("wslua2", false);
     lua_pushstring(L, data_path);
     lua_setfield(L, 2, "DATAPATH");
 
@@ -245,7 +245,7 @@ void load_lua_module(lua_State *L, const char *name)
     int type;
 
     BEGIN_STACK_DEBUG(L);
-    l_dofile(L, name, TRUE, FALSE); /* pushes module on stack */
+    l_dofile(L, name, true, false); /* pushes module on stack */
     luaL_checktype(L, -1, LUA_TTABLE);
     type = lua_getfield(L, -1, "register_protocol");
     if (type == LUA_TFUNCTION)
@@ -272,16 +272,16 @@ void wslua2_init(void)
     lua_atpanic(L, l_panic);
     luaL_openlibs(L);
 
-    luaL_requiref(L, MODULE_NAME, l_luaopen_wireshark, TRUE);
+    luaL_requiref(L, MODULE_NAME, l_luaopen_wireshark, true);
     lua_pop(L, 1);
 #ifdef HAVE_PCRE2
-    luaL_requiref(L, REX_MODULE_NAME, luaopen_rex_pcre2, TRUE);
+    luaL_requiref(L, REX_MODULE_NAME, luaopen_rex_pcre2, true);
     lua_pop(L, 1);
 #endif
 
     /* Lua has no granularity for file errors. We want to be quiet if
      * 'init.lua' doesn't exist (and only then) */
-    l_dofile(L, "init.lua", TRUE, TRUE);
+    l_dofile(L, "init.lua", true, true);
     dir = opendir(data_path);
     if (dir == NULL) {
         /* should not happen */
@@ -299,10 +299,10 @@ void wslua2_init(void)
 void wslua2_post_init(void)
 {
     lua_State *L = g_lua;
-    const gchar *opt;
+    const char *opt;
 
     while ((opt = ex_opt_get_next("wslua2")) != NULL) {
-        l_dofile(L, opt, FALSE, FALSE);
+        l_dofile(L, opt, false, false);
     }
 }
 

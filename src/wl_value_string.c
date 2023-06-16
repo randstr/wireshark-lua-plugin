@@ -51,7 +51,7 @@ static int wl_value_string_new(lua_State *L)
 {
     value_string vs;
     lua_Integer value;
-    const gchar *strptr;
+    const char *strptr;
 
     luaL_checktype(L, 1, LUA_TTABLE);
     int len = luaL_len(L, 1);

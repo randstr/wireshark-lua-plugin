@@ -27,7 +27,7 @@
 
 
 DLL_PUBLIC
-const gchar plugin_version[] = PLUGIN_VERSION;
+const char plugin_version[] = PLUGIN_VERSION;
 
 DLL_PUBLIC
 const int plugin_want_major = WIRESHARK_VERSION_MAJOR;

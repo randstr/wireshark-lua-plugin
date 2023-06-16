@@ -146,7 +146,7 @@ static int wl_prefs_register_bool_preference(lua_State *L)
     const char *name = luaL_checkstring(L, 2);
     const char *title = luaL_checkstring(L, 3);
     const char *description = luaL_checkstring(L, 4);
-    gboolean value = lua_toboolean(L, 5);
+    bool value = lua_toboolean(L, 5);
 
     lua_getuservalue(L, 1);
 

@@ -109,10 +109,10 @@ static int wl_register_dissector(lua_State *L)
 static int wl_dissector_try_uint(lua_State *L)
 {
     dissector_table_t dt;
-    gint len;
+    int len;
 
     const char *table = luaL_checkstring(L, 1);
-    guint32 val = luaL_checkinteger(L, 2);
+    uint32_t val = luaL_checkinteger(L, 2);
     tvbuff_t *tvb = luaW_check_tvbuff(L, 3);
     packet_info *pinfo = luaW_check_pinfo(L, 4);
     proto_tree *tree = luaW_check_proto_tree(L, 5);
@@ -142,7 +142,7 @@ static int wl_call_data_dissector(lua_State *L)
 static int wl_dissector_add_uint(lua_State *L)
 {
     const char *name = luaL_checkstring(L, 1);
-    guint32 pattern = (guint32)luaL_checkinteger(L, 2);
+    uint32_t pattern = (uint32_t)luaL_checkinteger(L, 2);
     dissector_handle_t handle = luaW_check_dissector_handle(L, 3);
 
     dissector_add_uint(name, pattern, handle);

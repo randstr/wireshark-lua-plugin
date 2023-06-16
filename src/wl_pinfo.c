@@ -145,8 +145,8 @@ static int wl_pinfo_newindex(lua_State *L)
 static int wl_col_add_string(lua_State *L)
 {
     column_info *cinfo = luaW_check_cinfo(L, 1);
-    gint col = luaL_checkinteger(L, 2);
-    const gchar *str = luaL_checkstring(L, 3);
+    int col = luaL_checkinteger(L, 2);
+    const char *str = luaL_checkstring(L, 3);
     col_add_str(cinfo, col, str);
     return 0;
 }
@@ -154,9 +154,9 @@ static int wl_col_add_string(lua_State *L)
 static int wl_col_append_fstring(lua_State *L)
 {
     column_info *cinfo = luaW_check_cinfo(L, 1);
-    gint col = luaL_checkinteger(L, 2);
+    int col = luaL_checkinteger(L, 2);
     luaW_string_format_pos(L, 3, lua_gettop(L) - 3);
-    const gchar *str = luaL_checkstring(L, 3);
+    const char *str = luaL_checkstring(L, 3);
     col_append_str(cinfo, col, str);
     return 0;
 }
@@ -169,7 +169,7 @@ static int wl_col_append_fstring(lua_State *L)
 static int wl_col_set_protocol(lua_State *L)
 {
     column_info *cinfo = luaW_check_cinfo(L, 1);
-    const gchar *str = luaL_checkstring(L, 2);
+    const char *str = luaL_checkstring(L, 2);
     col_set_str(cinfo, COL_PROTOCOL, str);
     return 0;
 }
