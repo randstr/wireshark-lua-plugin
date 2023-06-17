@@ -26,7 +26,7 @@ checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest"
               "${MINGW_PACKAGE_PREFIX}-python-pytest-xdist")
 provides=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-_commit="69a530c03073923a2d60a6069ee9ba5c078af465"
+_commit="60dedef3f18932f685ff2abd9f2bb7f7c8de9ffe"
 source=("${_realname}"::"git+https://github.com/wireshark/wireshark.git#commit=${_commit}")
 sha256sums=('SKIP')
 
