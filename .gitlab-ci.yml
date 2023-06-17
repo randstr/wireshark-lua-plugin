@@ -7,16 +7,15 @@ stages:
   - upload
 
 variables:
+  WIRESHARK_VERSION: "4.1"
   PACKAGE_VERSION: "0.1.2"
-  LINUX_AMD64_BINARY: "wireshark-${WIRESHARK_VERSION}-lua-plugin-${PACKAGE_VERSION}.tar.gz"
-  LINUX_AMD64_SHA256: "wireshark-${WIRESHARK_VERSION}-lua-plugin-${PACKAGE_VERSION}.tar.gz.sha256sum.txt"
-  WINDOWS_AMD64_BINARY: "wireshark-${WIRESHARK_VERSION}-lua-plugin-${PACKAGE_VERSION}.zip"
-  WINDOWS_AMD64_SHA256: "wireshark-${WIRESHARK_VERSION}-lua-plugin-${PACKAGE_VERSION}.zip.sha256sum.txt"
+  LINUX_AMD64_BINARY: "wireshark-lua-plugin-${WIRESHARK_VERSION}-${PACKAGE_VERSION}-x64-linux.tar.gz"
+  LINUX_AMD64_SHA256: "wireshark-lua-plugin-${WIRESHARK_VERSION}-${PACKAGE_VERSION}-x64-linux.tar.gz.sha256sum.txt"
+  WINDOWS_AMD64_BINARY: "wireshark-lua-plugin-${WIRESHARK_VERSION}-${PACKAGE_VERSION}-x64-windows.zip"
+  WINDOWS_AMD64_SHA256: "wireshark-lua-plugin-${WIRESHARK_VERSION}-${PACKAGE_VERSION}-x64-windows.zip.sha256sum.txt"
   PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/wireshark-lua-plugin/${PACKAGE_VERSION}"
 
 compile-gcc:
-  variables:
-    WIRESHARK_VERSION: "4.1"
   image: registry.gitlab.com/jvalverde/wireshark-lua-plugin/wireshark-ubuntu-dev
   stage: build
   script:
@@ -30,13 +29,11 @@ compile-gcc:
     - make package
   artifacts:
     paths:
-      - build/${LINUX_AMD64_BINARY}
-      - build/${LINUX_AMD64_SHA256}
+      - build/wireshark-lua-plugin-*.tar.gz
+      - build/wireshark-lua-plugin-*.tar.gz.sha256sum.txt
       - build/doc
 
 compile-mingw:
-  variables:
-    WIRESHARK_VERSION: "4.1"
   image: registry.gitlab.com/jvalverde/wireshark-lua-plugin/wireshark-mingw-dev
   stage: build
   script:
@@ -47,8 +44,8 @@ compile-mingw:
     - make package_zip
   artifacts:
     paths:
-      - build/${WINDOWS_AMD64_BINARY}
-      - build/${WINDOWS_AMD64_SHA256}
+      - build/wireshark-lua-plugin-*.zip
+      - build/wireshark-lua-plugin-*.zip.sha256sum.txt
 
 pages:
   stage: deploy
@@ -63,8 +60,6 @@ pages:
     - main
 
 upload:
-  variables:
-    WIRESHARK_VERSION: "4.1"
   stage: upload
   image: curlimages/curl:latest
   rules:

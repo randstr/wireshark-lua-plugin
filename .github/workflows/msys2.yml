@@ -38,5 +38,5 @@ jobs:
         with:
           name: package
           path: |
-            build/wireshark-*-lua-plugin-*.zip
-            build/wireshark-*-lua-plugin-*.zip.sha256sum.txt
+            build/wireshark-lua-plugin-*.zip
+            build/wireshark-lua-plugin-*.zip.sha256sum.txt
