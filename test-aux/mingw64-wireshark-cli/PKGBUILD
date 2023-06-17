@@ -67,7 +67,7 @@ build() {
       -DBUILD_sshdump=OFF \
       -DBUILD_ciscodump=OFF \
       -DBUILD_dpauxmon=OFF \
-      -DBUILD_ranpktdump=OFF \
+      -DBUILD_randpktdump=OFF \
       -DBUILD_wifidump=OFF \
       -DBUILD_udpdump=OFF \
       -DBUILD_sharkd=OFF \
