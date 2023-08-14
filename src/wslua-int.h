@@ -48,6 +48,7 @@
 #include "wl_proto.h"
 #include "wl_tvbuff.h"
 #include "wl_value_string.h"
+#include "wl_funnel.h"
 
 #define BEGIN_STACK_DEBUG(L) \
     int __top; do {__top = lua_gettop(L); } while(0)

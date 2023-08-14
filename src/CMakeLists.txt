@@ -4,6 +4,7 @@ set(WSLUA2_SRC
 	wauxlib.c
 	wl_addr.c
 	wl_expert.c
+	wl_funnel.c
 	wl_packet.c
 	wl_pinfo.c
 	wl_prefs.c

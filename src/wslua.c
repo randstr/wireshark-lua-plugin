@@ -279,6 +279,8 @@ void wslua2_init(void)
     lua_pop(L, 1);
 #endif
 
+    wl_funnel_init();
+
     /* Lua has no granularity for file errors. We want to be quiet if
      * 'init.lua' doesn't exist (and only then) */
     l_dofile(L, "init.lua", true, true);
