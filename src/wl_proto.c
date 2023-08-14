@@ -349,22 +349,22 @@ static int wl_prototree_add_item_ret(lua_State *L)
         item = proto_tree_add_item_ret_boolean(tree, *(hf->p_id), tvb, off->curr, length, encoding, &retval);
         lua_pushboolean(L, retval);
     }
-    else if (IS_FT_INT32(type)){
+    else if (FT_IS_INT32(type)){
         int32_t retval;
         item = proto_tree_add_item_ret_int(tree, *(hf->p_id), tvb, off->curr, length, encoding, &retval);
         lua_pushinteger(L, retval);
     }
-    else if (IS_FT_UINT32(type)){
+    else if (FT_IS_UINT32(type)){
         uint32_t retval;
         item = proto_tree_add_item_ret_uint(tree, *(hf->p_id), tvb, off->curr, length, encoding, &retval);
         lua_pushinteger(L, retval);
     }
-    else if (IS_FT_UINT64(type)){
+    else if (FT_IS_UINT64(type)){
         uint64_t retval;
         item = proto_tree_add_item_ret_uint64(tree, *(hf->p_id), tvb, off->curr, length, encoding, &retval);
         lua_pushinteger(L, retval);
     }
-    else if (IS_FT_STRING(type)) {
+    else if (FT_IS_STRING(type)) {
         uint8_t *retval;
         item = proto_tree_add_item_ret_string(tree, *(hf->p_id), tvb, off->curr, length, encoding, NULL, (const uint8_t **)&retval);
         lua_pushstring(L, (char *)retval);
