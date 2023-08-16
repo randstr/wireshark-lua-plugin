@@ -26,14 +26,13 @@ checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest"
               "${MINGW_PACKAGE_PREFIX}-python-pytest-xdist")
 provides=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-_commit="60dedef3f18932f685ff2abd9f2bb7f7c8de9ffe"
-source=("${_realname}"::"git+https://github.com/wireshark/wireshark.git#commit=${_commit}")
+source=("${_realname}"::"git+https://github.com/wireshark/wireshark.git")
 sha256sums=('SKIP')
 
 pkgver() {
   cd "${_realname}"
 
-  git describe --long "${_commit}" | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g;s/^v//g'
+  git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g;s/^v//g'
 }
 
 build() {
