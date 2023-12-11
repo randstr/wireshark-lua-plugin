@@ -1,7 +1,7 @@
 
 cmake_minimum_required(VERSION 3.12)
 
-project(wireshark-lua-plugin VERSION 0.2.0 DESCRIPTION "Wireshark Lua 5.4 Plugin" LANGUAGES C)
+project(wireshark-lua-plugin VERSION 0.3.0 DESCRIPTION "Wireshark Lua 5.4 Plugin" LANGUAGES C)
 
 option(ENABLE_REGEX "Build with lrexlib-pcre2" ON)
 
