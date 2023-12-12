@@ -219,6 +219,7 @@ static int l_luaopen_wireshark(lua_State *L)
     lua_setfield(L, 2, "EPAN_VERSION");
 
     load_enums(L);
+    wl_open_util(L);
     wl_open_proto(L);
     wl_open_tvbuff(L);
     wl_open_pinfo(L);

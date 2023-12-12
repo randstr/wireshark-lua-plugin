@@ -9,6 +9,7 @@ set(WSLUA2_SRC
 	wl_pinfo.c
 	wl_prefs.c
 	wl_proto.c
+	wl_util.c
 	wl_value_string.c
 	wl_tvbuff.c
 	wslua.c

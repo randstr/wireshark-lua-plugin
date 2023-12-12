@@ -40,6 +40,7 @@
 #include <epan/to_str.h>
 #include <epan/prefs.h>
 
+#include "wl_util.h"
 #include "wl_addr.h"
 #include "wl_expert.h"
 #include "wl_packet.h"
