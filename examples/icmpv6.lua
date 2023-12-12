@@ -1,6 +1,14 @@
 
 local ws = require("wireshark")
 
+-- Optional script information
+local script_info = {
+    version = "1.2.3",
+    spdx_id = "Your-SPDX-ID-Here",
+    home_url = "Your-URL-Here",
+    blurb = "Short description for this dissector module",
+}
+
 local proto
 local handle
 
@@ -130,5 +138,6 @@ local M = {}
 
 M.register_protocol = register_icmpv6
 M.register_handoff = handoff_icmpv6
+M.script_info = script_info
 
 return M

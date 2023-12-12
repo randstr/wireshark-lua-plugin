@@ -34,7 +34,10 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_C_VISIBILITY_PRESET hidden)
 
 add_compile_options(-Wall -Wextra)
-add_compile_definitions(PLUGIN_VERSION=\"${PROJECT_VERSION}\")
+add_compile_definitions(
+	PLUGIN_VERSION=\"${PROJECT_VERSION}\"
+	$<$<CONFIG:Debug>:WS_DEBUG>
+)
 if(ENABLE_REGEX)
 	add_compile_definitions(
 		HAVE_PCRE2

@@ -26,15 +26,16 @@
 
 static void plugin_register(void)
 {
-    static epan_plugin plug;
-
-    plug.init = wslua2_init;
-    plug.post_init = wslua2_post_init;
-    plug.dissect_init = wslua2_dissect_init;
-    plug.dissect_cleanup = wslua2_dissect_cleanup;
-    plug.cleanup = wslua2_cleanup;
-    plug.register_all_protocols = wslua2_register_all_protocols;
-    plug.register_all_handoffs = wslua2_register_all_handoffs;
+    static epan_plugin plug = {
+        .init = wslua2_init,
+        .post_init = wslua2_post_init,
+        .dissect_init = wslua2_dissect_init,
+        .dissect_cleanup = wslua2_dissect_cleanup,
+        .cleanup = wslua2_cleanup,
+        .register_all_protocols = wslua2_register_all_protocols,
+        .register_all_handoffs = wslua2_register_all_handoffs,
+        .get_descriptions = wslua2_get_descriptons,
+    };
     epan_register_plugin(&plug);
 }
 

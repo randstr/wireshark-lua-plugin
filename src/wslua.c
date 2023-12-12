@@ -48,6 +48,18 @@ lua_State *g_lua = NULL;
 
 static char *data_path = NULL;
 
+struct wl_plug {
+    char *name;
+    char *filename;
+    char *version;
+    char *spdx_id;
+    char *home_url;
+    char *blurb;
+    struct wl_plug *next;
+};
+
+static struct wl_plug *plug_list = NULL;
+
 #ifdef HAVE_PCRE2
 int luaopen_rex_pcre2(lua_State *L);
 #endif
@@ -64,6 +76,24 @@ static bool str_has_suffix(const char *str, const char *suffix)
         }
     }
     return true;
+}
+
+static char *build_data_path(const char *name)
+{
+    size_t len1, len2, size;
+    char *path, *s;
+
+    len1 = strlen(data_path);
+    len2 = strlen(name);
+    size = len1 + len2 + 2;
+    path = s = malloc(size);
+    strcpy(s, data_path);
+    s += len1;
+    *s++ = '/';
+    strcpy(s, name);
+    s += len2;
+    *s = '\0';
+    return path;
 }
 
 static void *l_alloc (void *ud _U_, void *ptr, size_t osize _U_, size_t nsize)
@@ -91,21 +121,11 @@ static int l_panic(lua_State *L)
     return 0;
 }
 
-static void l_dofile(lua_State *L, const char *file,
-                        bool use_datapath, bool ignore_missing)
+static void l_dofile(lua_State *L, const char *path, bool ignore_missing)
 {
-    const char *path;
-    char path_buf[1024];
     int err;
     bool skip = false;
 
-    if (use_datapath) {
-        snprintf(path_buf, sizeof(path_buf), "%s/%s", data_path, file);
-        path = path_buf;
-    }
-    else {
-        path = file;
-    }
     if (ignore_missing && access(path, F_OK) != 0)
         skip = true;
     else
@@ -130,7 +150,9 @@ static void l_dofile(lua_State *L, const char *file,
 static int wl_dofile(lua_State *L)
 {
     const char *file = luaL_checkstring(L, 1);
-    l_dofile(L, file, true, false);
+    char *path = build_data_path(file);
+    l_dofile(L, path, false);
+    free(path);
     return lua_gettop(L) - 1; /* ignore string argument */
 }
 
@@ -225,6 +247,62 @@ void wslua2_register_all_handoffs(register_cb cb, gpointer client_data)
     END_STACK_DEBUG(L, 0);
 }
 
+static void prepend_plugin(const char *name, const char *filename,
+                                const char *version, const char *spdx_id,
+                                const char *home_url, const char *blurb)
+{
+    struct wl_plug *plug = malloc(sizeof(struct wl_plug));
+    ws_assert(name);
+    plug->name = strdup(name);
+    ws_assert(filename);
+    plug->filename = strdup(filename);
+    if (version)
+        plug->version = strdup(version);
+    else
+        plug->version = NULL;
+    if (spdx_id)
+        plug->spdx_id = strdup(spdx_id);
+    else
+        plug->spdx_id = NULL;
+    if (home_url)
+        plug->home_url = strdup(home_url);
+    else
+        plug->home_url = NULL;
+    if (blurb)
+        plug->blurb = strdup(blurb);
+    else
+        plug->blurb = NULL;
+    plug->next = plug_list;
+    plug_list = plug;
+    ws_debug("Add plugin metadata: name = %s, file = %s, version = %s, "
+                "spdx = %s, url = %s, blurb = %s",
+                plug->name, plug->filename, plug->version, plug->spdx_id,
+                plug->home_url, plug->blurb);
+}
+
+static void free_plugin(struct wl_plug *plug)
+{
+    free(plug->name);
+    free(plug->filename);
+    free(plug->version);
+    free(plug->spdx_id);
+    free(plug->blurb);
+    free(plug);
+}
+
+static void free_plugin_list(void)
+{
+    struct wl_plug *plug = plug_list;
+    struct wl_plug *next;
+
+    while (plug != NULL) {
+        next = plug->next;
+        free_plugin(plug);
+        plug = next;
+    }
+    plug_list = NULL;
+}
+
 /* receives function on stack */
 static void insert_lua_entry_point(lua_State *L, const char *table_name)
 {
@@ -239,13 +317,41 @@ static void insert_lua_entry_point(lua_State *L, const char *table_name)
     END_STACK_DEBUG(L, -1);
 }
 
+/* receives module on stack */
+static void get_scrip_info(lua_State *L, const char *name, const char *file_path)
+{
+    int type, pc = 0;
+    const char *version = NULL;
+    const char *spdx_id = NULL;
+    const char *home_url = NULL;
+    const char *blurb = NULL;
 
-void load_lua_module(lua_State *L, const char *name)
+    type = lua_getfield(L, -1, "script_info");
+    pc = 1;
+    if (type == LUA_TTABLE) {
+        lua_getfield(L, -1, "version");
+        version = lua_tostring(L, -1);
+        lua_getfield(L, -2, "spdx_id");
+        spdx_id = lua_tostring(L, -1);
+        lua_getfield(L, -3, "home_url");
+        home_url = lua_tostring(L, -1);
+        lua_getfield(L, -4, "blurb");
+        blurb = lua_tostring(L, -1);
+        pc += 4;
+    }
+    prepend_plugin(name, file_path, version, spdx_id, home_url, blurb);
+    lua_pop(L, pc); // pop fields and table
+}
+
+static void load_lua_module(lua_State *L, const char *name)
 {
     int type;
+    char *file_path;
 
     BEGIN_STACK_DEBUG(L);
-    l_dofile(L, name, true, false); /* pushes module on stack */
+    file_path = build_data_path(name);
+    ws_debug("Load module \%s\"", file_path);
+    l_dofile(L, file_path, false); /* pushes module on stack */
     luaL_checktype(L, -1, LUA_TTABLE);
     type = lua_getfield(L, -1, "register_protocol");
     if (type == LUA_TFUNCTION)
@@ -257,7 +363,9 @@ void load_lua_module(lua_State *L, const char *name)
         insert_lua_entry_point(L, TABLE_REGISTER_HANDOFF);
     else
         lua_pop(L, 1);
-    lua_pop(L, 1);
+    get_scrip_info(L, name, file_path);
+    lua_pop(L, 1); // pop module
+    free(file_path);
     END_STACK_DEBUG(L, 0);
 }
 
@@ -267,6 +375,7 @@ void wslua2_init(void)
     DIR *dir;
     struct dirent *entry;
     const char *name;
+    char *init_path;
 
     L = g_lua = lua_newstate(l_alloc, NULL);
     lua_atpanic(L, l_panic);
@@ -283,7 +392,9 @@ void wslua2_init(void)
 
     /* Lua has no granularity for file errors. We want to be quiet if
      * 'init.lua' doesn't exist (and only then) */
-    l_dofile(L, "init.lua", true, true);
+    init_path = build_data_path("init.lua");
+    l_dofile(L, init_path, true);
+    free(init_path);
     dir = opendir(data_path);
     if (dir == NULL) {
         /* should not happen */
@@ -304,7 +415,7 @@ void wslua2_post_init(void)
     const char *opt;
 
     while ((opt = ex_opt_get_next("wslua2")) != NULL) {
-        l_dofile(L, opt, false, false);
+        l_dofile(L, opt, false);
     }
 }
 
@@ -337,4 +448,17 @@ void wslua2_cleanup(void)
     if (data_path)
         wmem_free(NULL, data_path);
     data_path = NULL;
+    free_plugin_list();
+}
+
+void wslua2_get_descriptons(plugin_description_callback callback, void *user_data)
+{
+    struct wl_plug *p;
+
+    for (p = plug_list; p != NULL; p = p->next) {
+        callback(p->name, p->version, WS_PLUGIN_DESC_DISSECTOR,
+                    p->spdx_id, p->blurb, p->home_url,
+                    p->filename, WS_PLUGIN_SCOPE_USER,
+                    user_data);
+    }
 }
