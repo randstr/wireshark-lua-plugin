@@ -57,7 +57,7 @@ pages:
     paths:
       - public
   only:
-    - main
+    - master
 
 upload:
   stage: upload
