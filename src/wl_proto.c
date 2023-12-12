@@ -542,7 +542,7 @@ static int wl_offset_gc(lua_State *L)
 static int wl_offset_new(lua_State *L)
 {
     lua_Integer start = luaL_optinteger(L, 1, 0);
-    struct wl_offset *off = malloc(sizeof(struct wl_offset));
+    struct wl_offset *off = xmalloc(sizeof(struct wl_offset));
     off->curr = start;
     off->step = 0;
     luaW_push_offset(L, off);
@@ -614,7 +614,7 @@ static int wl_proto_register_subtree_array(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TTABLE);
 
-    int *index = malloc(sizeof(int));
+    int *index = xmalloc(sizeof(int));
 
     lua_pushnil(L);
     while (lua_next(L, 1) != 0) {

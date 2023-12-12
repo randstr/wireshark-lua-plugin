@@ -58,4 +58,6 @@
 
 extern lua_State *g_lua;
 
+void *xmalloc(size_t size);
+
 #endif

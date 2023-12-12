@@ -64,6 +64,15 @@ static struct wl_plug *plug_list = NULL;
 int luaopen_rex_pcre2(lua_State *L);
 #endif
 
+void *xmalloc(size_t size)
+{
+    void *p = malloc(size);
+    if (!p) {
+        ws_error("Out of memory");
+    }
+    return p;
+}
+
 static bool str_has_suffix(const char *str, const char *suffix)
 {
     size_t l1 = strlen(str);
@@ -86,7 +95,7 @@ static char *build_data_path(const char *name)
     len1 = strlen(data_path);
     len2 = strlen(name);
     size = len1 + len2 + 2;
-    path = s = malloc(size);
+    path = s = xmalloc(size);
     strcpy(s, data_path);
     s += len1;
     *s++ = '/';
@@ -159,7 +168,7 @@ static int wl_dofile(lua_State *L)
 static int wl_in_cksum(lua_State *L)
 {
     int nargs = lua_gettop(L);
-    vec_t *p = malloc(nargs * sizeof(vec_t));
+    vec_t *p = xmalloc(nargs * sizeof(vec_t));
     const char *s;
     size_t len;
 
@@ -251,7 +260,7 @@ static void prepend_plugin(const char *name, const char *filename,
                                 const char *version, const char *spdx_id,
                                 const char *home_url, const char *blurb)
 {
-    struct wl_plug *plug = malloc(sizeof(struct wl_plug));
+    struct wl_plug *plug = xmalloc(sizeof(struct wl_plug));
     ws_assert(name);
     plug->name = strdup(name);
     ws_assert(filename);
