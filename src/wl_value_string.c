@@ -66,7 +66,7 @@ static int wl_value_string_new(lua_State *L)
         strptr = lua_tostring(L, -1);
 
         vs.value = value;
-        vs.strptr = wmem_strdup(NULL, strptr);
+        vs.strptr = xstrdup(strptr);
         vs_array[i] = vs;
         lua_pop(L, 3);
     }

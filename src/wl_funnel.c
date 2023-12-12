@@ -52,7 +52,7 @@ static int wl_funnel_console_eval(const char *console_input,
     if (lcode != LUA_OK) {
         ws_debug("luaL_loadstring(): %s (%d)", l_error_msg(lcode), lcode);
         if (error_hint) {
-            *error_hint = g_strdup(l_error_msg(lcode));
+            *error_hint = xstrdup(l_error_msg(lcode));
         }
         return -1;
     }
@@ -61,11 +61,11 @@ static int wl_funnel_console_eval(const char *console_input,
     if (lcode != LUA_OK) {
         ws_debug("lua_pcall(): %s (%d)", l_error_msg(lcode), lcode);
         if (error_hint) {
-            *error_hint = g_strdup(l_error_msg(lcode));
+            *error_hint = xstrdup(l_error_msg(lcode));
         }
         /* If we have an error message return it. */
         if (error_ptr && !lua_isnil(_L, -1)) {
-            *error_ptr = g_strdup(lua_tostring(_L, -1));
+            *error_ptr = xstrdup(lua_tostring(_L, -1));
         }
         return 1;
     }

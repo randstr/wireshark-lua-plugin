@@ -73,6 +73,17 @@ void *xmalloc(size_t size)
     return p;
 }
 
+void *xstrdup(const char *str)
+{
+    if (!str)
+        return NULL;
+    char *ret = strdup(str);
+    if (!ret) {
+        ws_error("Out of memory");
+    }
+    return ret;
+}
+
 static bool str_has_suffix(const char *str, const char *suffix)
 {
     size_t l1 = strlen(str);
@@ -262,25 +273,13 @@ static void prepend_plugin(const char *name, const char *filename,
 {
     struct wl_plug *plug = xmalloc(sizeof(struct wl_plug));
     ws_assert(name);
-    plug->name = strdup(name);
+    plug->name = xstrdup(name);
     ws_assert(filename);
-    plug->filename = strdup(filename);
-    if (version)
-        plug->version = strdup(version);
-    else
-        plug->version = NULL;
-    if (spdx_id)
-        plug->spdx_id = strdup(spdx_id);
-    else
-        plug->spdx_id = NULL;
-    if (home_url)
-        plug->home_url = strdup(home_url);
-    else
-        plug->home_url = NULL;
-    if (blurb)
-        plug->blurb = strdup(blurb);
-    else
-        plug->blurb = NULL;
+    plug->filename = xstrdup(filename);
+    plug->version = xstrdup(version);
+    plug->spdx_id = xstrdup(spdx_id);
+    plug->home_url = xstrdup(home_url);
+    plug->blurb = xstrdup(blurb);
     plug->next = plug_list;
     plug_list = plug;
     ws_debug("Add plugin metadata: name = %s, file = %s, version = %s, "
