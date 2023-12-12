@@ -83,13 +83,8 @@ make install
 ## Loading Lua scripts
 
 Dissectors written in Lua using this plugin should be copied into a folder
-named "wslua2". The folder needs to be created inside Wireshark's Lua personal
-script folder (also called Lua plugins in Wireshark). The personal Lua plugin
-folder paths can be consulted in Wireshark or TShark:
-
-```sh
-tshark -G folders
-```
+named "wslua2". The folder needs to be created inside Wireshark's configuration
+directory `$XDG_CONFIG_HOME/wireshark`.
 
 Any file with the extension ".lua" is automatically loaded.
 You may also use "init.lua" for custom initialization code.
