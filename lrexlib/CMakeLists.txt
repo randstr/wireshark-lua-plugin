@@ -11,6 +11,6 @@ target_link_libraries(lrexlib PRIVATE ${PCRE2_LIBRARIES})
 target_include_directories(lrexlib SYSTEM PRIVATE ${PCRE2_INCLUDE_DIRS})
 target_compile_definitions(lrexlib PRIVATE
 	${PCRE2_DEFINITIONS}
-	VERSION=\"2.9.1\"
+	VERSION=\"2.9.2\"
 	PCRE2_CODE_UNIT_WIDTH=8
 )
