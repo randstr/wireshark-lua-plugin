@@ -45,6 +45,17 @@ enum ws_log_level luaW_check_log_level(lua_State *L, int idx)
     return level;
 }
 
+static void luaW_push_log_domain(lua_State *L, const char *domain)
+{
+    char **ptr = NEWUSERDATA(L, char *, "wslua.LogDomain");
+    *ptr = xstrdup(domain);
+}
+
+static char **luaW_check_log_domain(lua_State *L, int arg)
+{
+    return luaL_checkudata(L, arg, "wslua.LogDomain");
+}
+
 static int l_log_full(lua_State *L, const char *domain, enum ws_log_level log_level,
                         int format_idx, int stack_level)
 {
@@ -97,6 +108,181 @@ static int l_log_full(lua_State *L, const char *domain, enum ws_log_level log_le
 }
 
 /***
+ * A Logger class with an associated domain name.
+ * @type LogDomain
+ */
+
+/***
+ * Log a message
+ * @function log
+ * @string level the log level
+ * @string format the message string format
+ * @string[opt] params followed by the format arguments 
+ */
+static int wl_log_domain_log(lua_State *L)
+{
+    char *domain = *luaW_check_log_domain(L, 1);
+    enum ws_log_level log_level = luaW_check_log_level(L, 2);
+
+    // First check if the message should be printed.
+    if (!ws_log_msg_is_active(domain, log_level))
+        return 0;
+
+    l_log_full(L, domain, log_level, 3, -1);
+    return 0;
+}
+
+/***
+ * Log a message with file/line/func
+ * @function logf
+ * @string level the log level
+ * @string format the message string format
+ * @string[opt] params followed by the format arguments 
+ */
+static int wl_log_domain_log_full(lua_State *L)
+{
+    char *domain = *luaW_check_log_domain(L, 1);
+    enum ws_log_level log_level = luaW_check_log_level(L, 2);
+
+    // First check if the message should be printed.
+    if (!ws_log_msg_is_active(domain, log_level))
+        return 0;
+
+    l_log_full(L, domain, log_level, 3, 1);
+    return 0;
+}
+
+/***
+ * Log a message with "noisy" level
+ * @function noisy
+ * @string format the message string format
+ * @string[opt] params followed by the format arguments 
+ */
+static int wl_log_domain_noisy(lua_State *L)
+{
+    char *domain = *luaW_check_log_domain(L, 1);
+
+    // First check if the message should be printed.
+    if (!ws_log_msg_is_active(domain, LOG_LEVEL_NOISY))
+        return 0;
+
+    l_log_full(L, domain, LOG_LEVEL_NOISY, 2, 1);
+    return 0;
+}
+
+/***
+ * Log a message with "debug" level
+ * @function debug
+ * @string format the message string format
+ * @string[opt] params followed by the format arguments 
+ */
+static int wl_log_domain_debug(lua_State *L)
+{
+    char *domain = *luaW_check_log_domain(L, 1);
+
+    // First check if the message should be printed.
+    if (!ws_log_msg_is_active(domain, LOG_LEVEL_DEBUG))
+        return 0;
+
+    l_log_full(L, domain, LOG_LEVEL_DEBUG, 2, 1);
+    return 0;
+}
+
+/***
+ * Log a message with "info" level
+ * @function info
+ * @string format the message string format
+ * @string[opt] params followed by the format arguments 
+ */
+static int wl_log_domain_info(lua_State *L)
+{
+    char *domain = *luaW_check_log_domain(L, 1);
+
+    // First check if the message should be printed.
+    if (!ws_log_msg_is_active(domain, LOG_LEVEL_INFO))
+        return 0;
+
+    l_log_full(L, domain, LOG_LEVEL_INFO, 2, -1);
+    return 0;
+}
+
+/***
+ * Log a message with "message" level
+ * @function message
+ * @string format the message string format
+ * @string[opt] params followed by the format arguments 
+ */
+static int wl_log_domain_message(lua_State *L)
+{
+    char *domain = *luaW_check_log_domain(L, 1);
+
+    // First check if the message should be printed.
+    if (!ws_log_msg_is_active(domain, LOG_LEVEL_MESSAGE))
+        return 0;
+
+    l_log_full(L, domain, LOG_LEVEL_MESSAGE, 2, -1);
+    return 0;
+}
+
+/***
+ * Log a message with "warning" level
+ * @function warning
+ * @string format the message string format
+ * @string[opt] params followed by the format arguments 
+ */
+static int wl_log_domain_warning(lua_State *L)
+{
+    char *domain = *luaW_check_log_domain(L, 1);
+
+    // First check if the message should be printed.
+    if (!ws_log_msg_is_active(domain, LOG_LEVEL_WARNING))
+        return 0;
+
+    l_log_full(L, domain, LOG_LEVEL_WARNING, 2, 1);
+    return 0;
+}
+
+/***
+ * Log a message with "echo" level
+ * @function DEBUG_HERE
+ * @string format the message string format
+ * @string[opt] params followed by the format arguments 
+ */
+static int wl_log_domain_debug_here(lua_State *L)
+{
+    char *domain = *luaW_check_log_domain(L, 1);
+    l_log_full(L, domain, LOG_LEVEL_ECHO, 2, 1);
+    return 0;
+}
+
+/***
+ * String representation
+ * @function __tostring
+ */
+static int wl_log_domain_tostring(lua_State *L)
+{
+    char *domain = *luaW_check_log_domain(L, 1);
+    lua_pushfstring(L, "wslua.LogDomain: %s", domain);
+    return 1;
+}
+
+/***
+ * @section end
+ */
+
+/***
+ * Create a new log domain logger
+ * @function new_log_domain
+ * @string domain the domain name
+ */
+static int wl_new_log_domain(lua_State *L)
+{
+    const char *domain = luaL_checkstring(L, 1);
+    luaW_push_log_domain(L, domain);
+    return 1;
+}
+
+/***
  * This function is called to output a message to the log.
  * @function log
  * @string domain the log domain
@@ -140,6 +326,99 @@ static int wl_log_full(lua_State *L)
 }
 
 /***
+ * This function is called to output a "noisy" level messag to the log.
+ * @function noisy
+ * @string domain the log domain
+ * @string format the message string format
+ * @string[opt] params followed by the format arguments 
+ */
+static int wl_log_noisy(lua_State *L)
+{
+    const char *domain = luaL_checkstring(L, 1);
+
+    // First check if the message should be printed.
+    if (!ws_log_msg_is_active(domain, LOG_LEVEL_NOISY))
+        return 0;
+
+    // stack level 1 = above the logf() call
+    return l_log_full(L, domain, LOG_LEVEL_NOISY, 3, 1);
+}
+
+/***
+ * This function is called to output a "debug" level messag to the log.
+ * @function debug
+ * @string domain the log domain
+ * @string format the message string format
+ * @string[opt] params followed by the format arguments 
+ */
+static int wl_log_debug(lua_State *L)
+{
+    const char *domain = luaL_checkstring(L, 1);
+
+    // First check if the message should be printed.
+    if (!ws_log_msg_is_active(domain, LOG_LEVEL_DEBUG))
+        return 0;
+
+    // stack level 1 = above the logf() call
+    return l_log_full(L, domain, LOG_LEVEL_DEBUG, 3, 1);
+}
+
+/***
+ * This function is called to output a "info" level messag to the log.
+ * @function info
+ * @string domain the log domain
+ * @string format the message string format
+ * @string[opt] params followed by the format arguments 
+ */
+static int wl_log_info(lua_State *L)
+{
+    const char *domain = luaL_checkstring(L, 1);
+
+    // First check if the message should be printed.
+    if (!ws_log_msg_is_active(domain, LOG_LEVEL_INFO))
+        return 0;
+
+    return l_log_full(L, domain, LOG_LEVEL_INFO, 3, -1);
+}
+
+/***
+ * This function is called to output a "message" level messag to the log.
+ * @function message
+ * @string domain the log domain
+ * @string format the message string format
+ * @string[opt] params followed by the format arguments 
+ */
+static int wl_log_message(lua_State *L)
+{
+    const char *domain = luaL_checkstring(L, 1);
+
+    // First check if the message should be printed.
+    if (!ws_log_msg_is_active(domain, LOG_LEVEL_MESSAGE))
+        return 0;
+
+    return l_log_full(L, domain, LOG_LEVEL_MESSAGE, 3, -1);
+}
+
+/***
+ * This function is called to output a "warning" level messag to the log.
+ * @function warning
+ * @string domain the log domain
+ * @string format the message string format
+ * @string[opt] params followed by the format arguments 
+ */
+static int wl_log_warning(lua_State *L)
+{
+    const char *domain = luaL_checkstring(L, 1);
+
+    // First check if the message should be printed.
+    if (!ws_log_msg_is_active(domain, LOG_LEVEL_WARNING))
+        return 0;
+
+    // stack level 1 = above the logf() call
+    return l_log_full(L, domain, LOG_LEVEL_WARNING, 3, 1);
+}
+
+/***
  * This function is used for debugging only. It always prints the message
  * regardless of the log level.
  * In addition to the message this function provides file/line/function
@@ -156,16 +435,36 @@ static int wl_log_debug_here(lua_State *L)
     return l_log_full(L, domain, LOG_LEVEL_ECHO, 2, 1);
 }
 
+static const struct luaL_Reg wl_log_domain_m[] = {
+    { "log", wl_log_domain_log },
+    { "logf", wl_log_domain_log_full },
+    { "noisy", wl_log_domain_noisy },
+    { "debug", wl_log_domain_debug },
+    { "info", wl_log_domain_info },
+    { "message", wl_log_domain_message },
+    { "warning", wl_log_domain_warning },
+    { "DEBUG_HERE", wl_log_domain_debug_here },
+    { "__tostring", wl_log_domain_tostring },
+    { NULL, NULL }
+};
+
 static const struct luaL_Reg wl_util_f[] = {
     { "log", wl_log },
     { "logf", wl_log_full },
+    { "noisy", wl_log_noisy },
+    { "debug", wl_log_debug },
+    { "info", wl_log_info },
+    { "message", wl_log_message },
+    { "warning", wl_log_warning },
     { "DEBUG_HERE", wl_log_debug_here },
+    { "new_log_domain", wl_new_log_domain },
     { NULL, NULL }
 };
 
 /* Receives module on the stack */
 void wl_open_util(lua_State *L)
 {
+    luaW_newmetatable(L, "wslua.LogDomain", wl_log_domain_m);
     luaL_newlib(L, wl_util_f);
     lua_setfield(L, -2, "util");
 }

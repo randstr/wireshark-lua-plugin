@@ -9,6 +9,8 @@ local script_info = {
     blurb = "Short description for this dissector module",
 }
 
+local log = ws.util.new_log_domain("IPv6-Lua")
+
 local ipv6 = {}
 
 ipv6.hf = {
@@ -96,6 +98,8 @@ local function dissect_ipv6(tvb, pinfo, tree, cinfo)
 
     ws.dissector_try_uint("ip.proto", nxt,
                             tvb:new_subset_remaining(offset), pinfo, tree)
+
+    log:debug("Finished dissecting %d bytes", tvb:captured_length())
 
     return tvb:captured_length()
 end

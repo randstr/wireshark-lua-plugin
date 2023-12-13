@@ -9,6 +9,8 @@ local script_info = {
     blurb = "Short description for this dissector module",
 }
 
+local log = ws.util.new_log_domain("ICMPv6-Lua")
+
 local proto
 local handle
 
@@ -113,7 +115,9 @@ local function dissect_icmpv6(tvb, pinfo, tree, cinfo)
 
     ws.call_data_dissector(tvb:new_subset_remaining(offset), pinfo, ti);
 
-    return tvb:reported_length()
+    log:debug("Finished dissecting %d bytes", tvb:captured_length())
+
+    return tvb:captured_length()
 end
 
 local function register_icmpv6()

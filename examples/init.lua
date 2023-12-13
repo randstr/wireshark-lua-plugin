@@ -2,4 +2,4 @@
 
 local ws = require("wireshark")
 
-ws.util.log("wslua2", "info", "Loading \"init.lua\" using version %s and epan version %s", ws.VERSION, ws.EPAN_VERSION)
+ws.util.info("wslua2", "Loading \"init.lua\" using version %s and epan version %s", ws.VERSION, ws.EPAN_VERSION)
