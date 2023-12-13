@@ -75,10 +75,6 @@ address_type ftenum_to_addr_type(enum ftenum ft)
  * @type IPv4
  */
 
-/***
- * IPv4 string representation
- * @function __tostring
- */
 static int wl_ipv4_tostring(lua_State *L)
 {
     uint32_t ip4 = luaW_check_ipv4(L, 1);
@@ -89,14 +85,27 @@ static int wl_ipv4_tostring(lua_State *L)
 }
 
 /***
+ * Create a new IPv4 Address
+ * @function Address.ipv4
+ * @string addr the address representation
+ */
+static int wl_addr_ipv4(lua_State *L)
+{
+    const char *str = luaL_checkstring(L, 1);
+    ws_in4_addr addr;
+    errno = 0;
+    if (!ws_inet_pton4(str, &addr)){
+        luaL_error(L, "error converting IPv4 string '%s': $s", str, strerror(errno));
+    }
+    luaW_push_ipv4(L, addr);
+    return 1;
+}
+
+/***
  * IPv6 address class.
  * @type IPv6
  */
 
-/***
- * IPv6 string representation
- * @function __tostring
- */
 static int wl_ipv6_tostring(lua_State *L)
 {
     const struct e_in6_addr *ip6 = luaW_check_ipv6(L, 1);
@@ -107,14 +116,27 @@ static int wl_ipv6_tostring(lua_State *L)
 }
 
 /***
+ * Create a new IPv6 Address
+ * @function Address.ipv6
+ * @string addr the address representation
+ */
+static int wl_addr_ipv6(lua_State *L)
+{
+    const char *str = luaL_checkstring(L, 1);
+    ws_in6_addr addr;
+    errno = 0;
+    if (!ws_inet_pton6(str, &addr)){
+        luaL_error(L, "error converting IPv6 string '%s': $s", str, strerror(errno));
+    }
+    luaW_push_ipv6(L, &addr);
+    return 1;
+}
+
+/***
  * Generic address class.
  * @type Address
  */
 
-/***
- * Address string representation
- * @function __tostring
- */
 static int wl_addr_tostring(lua_State *L)
 {
     address *addr = luaW_check_addr(L, 1);
@@ -129,30 +151,6 @@ static int wl_addr_gc(lua_State *L)
     address *addr = luaW_check_addr(L, 1);
     free_address(addr);
     return 0;
-}
-
-static int wl_addr_ipv4(lua_State *L)
-{
-    const char *str = luaL_checkstring(L, 1);
-    ws_in4_addr addr;
-    errno = 0;
-    if (!ws_inet_pton4(str, &addr)){
-        luaL_error(L, "error converting IPv4 string '%s': $s", str, strerror(errno));
-    }
-    luaW_push_ipv4(L, addr);
-    return 1;
-}
-
-static int wl_addr_ipv6(lua_State *L)
-{
-    const char *str = luaL_checkstring(L, 1);
-    ws_in6_addr addr;
-    errno = 0;
-    if (!ws_inet_pton6(str, &addr)){
-        luaL_error(L, "error converting IPv6 string '%s': $s", str, strerror(errno));
-    }
-    luaW_push_ipv6(L, &addr);
-    return 1;
 }
 
 /***
@@ -212,6 +210,11 @@ static int wl_addr_new(lua_State *L)
     return 1;
 }
 
+/***
+ * Pack an address as binary data
+ * @function pack
+ * @return string the packed string
+ */
 static int wl_addr_pack(lua_State *L)
 {
     address *addr = luaW_check_addr(L, 1);
