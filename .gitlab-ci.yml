@@ -16,7 +16,7 @@ variables:
   PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/wireshark-lua-plugin/${PACKAGE_VERSION}"
 
 compile-gcc:
-  image: registry.gitlab.com/jvalverde/wireshark-lua-plugin/wireshark-ubuntu-dev
+  image: registry.gitlab.com/jvalverde/wireshark-lua-plugin/wireshark-4.4-ubuntu-dev
   stage: build
   script:
     - mkdir build
@@ -34,7 +34,7 @@ compile-gcc:
       - build/doc
 
 compile-mingw:
-  image: registry.gitlab.com/jvalverde/wireshark-lua-plugin/wireshark-mingw-dev
+  image: registry.gitlab.com/jvalverde/wireshark-lua-plugin/wireshark-4.4-mingw-dev
   stage: build
   script:
     - mkdir build
