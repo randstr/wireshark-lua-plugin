@@ -7,7 +7,7 @@ stages:
   - upload
 
 variables:
-  WIRESHARK_VERSION: "4.3"
+  WIRESHARK_VERSION: "4.5"
   PACKAGE_VERSION: "0.3.0"
   LINUX_AMD64_BINARY: "wireshark-lua-plugin-${WIRESHARK_VERSION}-${PACKAGE_VERSION}-x64-linux.tar.gz"
   LINUX_AMD64_SHA256: "wireshark-lua-plugin-${WIRESHARK_VERSION}-${PACKAGE_VERSION}-x64-linux.tar.gz.sha256sum.txt"
