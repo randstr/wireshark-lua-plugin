@@ -8,7 +8,7 @@ stages:
 
 variables:
   WIRESHARK_VERSION: "4.2"
-  PACKAGE_VERSION: "0.3.0"
+  PACKAGE_VERSION: "0.3.1"
   LINUX_AMD64_BINARY: "wireshark-lua-plugin-${WIRESHARK_VERSION}-${PACKAGE_VERSION}-x64-linux.tar.gz"
   LINUX_AMD64_SHA256: "wireshark-lua-plugin-${WIRESHARK_VERSION}-${PACKAGE_VERSION}-x64-linux.tar.gz.sha256sum.txt"
   WINDOWS_AMD64_BINARY: "wireshark-lua-plugin-${WIRESHARK_VERSION}-${PACKAGE_VERSION}-x64-windows.zip"
