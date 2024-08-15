@@ -26,7 +26,7 @@ checkdepends=("${MINGW_PACKAGE_PREFIX}-python-pytest"
               "${MINGW_PACKAGE_PREFIX}-python-pytest-xdist")
 provides=("${MINGW_PACKAGE_PREFIX}-${_realname}")
 conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-source=("${_realname}"::"git+https://github.com/wireshark/wireshark.git")
+source=("${_realname}"::"git+https://github.com/wireshark/wireshark.git#branch=release-4.4")
 sha256sums=('SKIP')
 
 pkgver() {
