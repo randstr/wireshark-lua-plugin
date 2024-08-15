@@ -46,7 +46,6 @@ void plugin_register(void)
         .cleanup = wslua2_cleanup,
         .register_all_protocols = wslua2_register_all_protocols,
         .register_all_handoffs = wslua2_register_all_handoffs,
-        .get_descriptions = wslua2_get_descriptons,
     };
     epan_register_plugin(&plug);
 }

@@ -459,15 +459,3 @@ void wslua2_cleanup(void)
     data_path = NULL;
     free_plugin_list();
 }
-
-void wslua2_get_descriptons(plugin_description_callback callback, void *user_data)
-{
-    struct wl_plug *p;
-
-    for (p = plug_list; p != NULL; p = p->next) {
-        callback(p->name, p->version, WS_PLUGIN_DESC_DISSECTOR,
-                    p->spdx_id, p->blurb, p->home_url,
-                    p->filename, WS_PLUGIN_SCOPE_USER,
-                    user_data);
-    }
-}

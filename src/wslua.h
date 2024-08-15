@@ -35,6 +35,4 @@ void wslua2_dissect_cleanup(epan_dissect_t *);
 
 void wslua2_cleanup(void);
 
-void wslua2_get_descriptons(plugin_description_callback callback, void *user_data);
-
 #endif
