@@ -48,7 +48,7 @@ static int wl_tvb_get_guint8(lua_State *L)
 {
     tvbuff_t *tvb = luaW_check_tvbuff(L, 1);
     int offset = luaW_check_offset_toint(L, 2);
-    uint8_t val = tvb_get_guint8(tvb, offset);
+    uint8_t val = tvb_get_uint8(tvb, offset);
     lua_pushinteger(L, val);
     return 1;
 }
