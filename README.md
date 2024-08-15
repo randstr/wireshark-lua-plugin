@@ -30,10 +30,8 @@ Non-goals are backward compatibility and one-to-one feature parity.
 
 ### Binary and source compatibility
 
-To use the plugin you will have to install Wireshark or build it from source
-code. This plugin is under development and should be compiled and tested against
-the tip of the development branch for Wireshark. In the future other plugin
-branches will be created to support Wireshark stable releases.
+The plugin master branch should be considered unstable and must be compiled
+from source against Wireshark's master branch.
 
 ### Building Wireshark
 
@@ -77,18 +75,6 @@ To install the plugin on the system (may need to use sudo):
 ```sh
 make install
 ```
-
-## Installing from a binary release
-
-Compiled plugin binary snapshots are provided for Windows and Linux. Since
-Wireshark 4.3 the easiest way to install the plugin is to run the Wireshark GUI
-and select the "Install Plugin" option from the Tools menu, then select the
-downloaded plugin binary file in the file dialog. Wireshark will then install
-it to the personal plugins folder after running some compatibility checks.
-
-Please note that these plugin binary snapshots can be out-of-date and are
-intended to allow people in a hurry to test the code. Compiling from source
-is recommended for best compatibility with the Wireshark development branch.
 
 ## Loading Lua scripts
 
