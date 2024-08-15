@@ -30,8 +30,18 @@ Non-goals are backward compatibility and one-to-one feature parity.
 
 ### Binary and source compatibility
 
-The plugin master branch should be considered unstable and must be compiled
-from source against Wireshark's master branch.
+The plugin master branch is under development and should be considered
+unstable. If using the master branch it is strongly recommended to compile
+the plugin from source against Wireshark's master branch. Source and binary
+compatibility is not guaranteed and can often break.
+
+Plugin branches tracking a Wireshark stable branch can be expected to have
+better compatibility. In particular it should work reasonably well with
+official Wireshark releases.
+
+For those in a hurry a plugin binary release is provided for the latest
+Wireshark stable branch but keep in mind that although rarer breaks in binary
+compatibility can still happen occasionally.
 
 ### Building Wireshark
 
@@ -54,6 +64,7 @@ installation is a separate install step and it is required to build any Wireshar
 From the plugin source directory run:
 
 ```sh
+WIRESHARK_PREFIX=/opt/wireshark
 mkdir build && cd build
 cmake -DCMAKE_PREFIX_PATH=$WIRESHARK_PREFIX /path/to/plugin/source
 make
