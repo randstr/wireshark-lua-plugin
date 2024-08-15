@@ -121,7 +121,7 @@ lua_Integer luaW_check_offset_toint(lua_State *L, int arg)
  * @string[optchain] blurb field blurb
  * @treturn HFInfo header field info
  */
-static int wl_hf_register_info_new(lua_State *L)
+static int new_hf_register_info(lua_State *L)
 {
     lua_geti(L, 1, 1);
     const char *name = luaL_checkstring(L, -1);
@@ -590,7 +590,7 @@ static int wl_proto_register_field_array(lua_State *L)
         luaL_checktype(L, -2, LUA_TSTRING);
         luaL_checktype(L, -1, LUA_TTABLE);
         /* uses 'key' (at index -2) and 'value' (at index -1) */
-        lua_pushcfunction(L, wl_hf_register_info_new);
+        lua_pushcfunction(L, new_hf_register_info);
         lua_insert(L, -2);
         /* call function on table value */
         luaW_call(L, 1, 1);

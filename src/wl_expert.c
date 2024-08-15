@@ -45,32 +45,8 @@ void luaW_push_expert_register_info(lua_State *L, ei_register_info *ei)
     *ptr = ei;
 }
 
-/***
- * An ExpertModule class.
- * @type ExpertModule
- */
-
-/***
- * @section end
- */
-
-/***
- * An ExpertRegisterInfo class.
- * @type ExpertRegisterInfo
- */
-
-/***
- * @section end
- */
-
-/***
- * Create a new ExpertRegisterInfo
- * @function new_expert_register_info
- * @tparam tab array the expert info value to register
- * @treturn ExpertRegisterInfo the expert register info object
- */
 /* receives array on top of stack (-1, +1) */
-static int  wl_new_expert_register_info(lua_State *L)
+static int new_expert_register_info(lua_State *L)
 {
     const char *name;
     int group;
@@ -129,7 +105,7 @@ static int  wl_new_expert_register_info(lua_State *L)
 
 /***
  * Register an expert info module associated with proto
- * @function register_protocol
+ * @function expert_register_protocol
  * @tparam Protocol proto the protocol to register
  * @treturn ExpertModule the expert module object
  */
@@ -143,10 +119,9 @@ static int wl_expert_register_protocol(lua_State *L)
 }
 
 /***
- * Register a expert info array. The table passed can contain RegisterExpertInfo
- * objects or plain Lua arrays. Array elements are converted into ExpertRegisterInfo *inplace*.
- * @function register_field_array
- * @tparam {[string]=ExpertRegisterInfo,...} fields table with ExpertRegisterInfo objects
+ * Register an expert info array. Array elements are converted into ExpertRegisterInfo *inplace*.
+ * @function expert_register_field_array
+ * @tparam {[string]=ExpertRegisterInfo,...} fields array of expert infos
  */
 static int wl_expert_register_field_array(lua_State *L)
 {
@@ -164,7 +139,7 @@ static int wl_expert_register_field_array(lua_State *L)
         value_type = lua_type(L, -1);
         if (value_type == LUA_TTABLE) {
             /* Convert array to ExpertRegisterInfo */
-            lua_pushcfunction(L, wl_new_expert_register_info);
+            lua_pushcfunction(L, new_expert_register_info);
             lua_insert(L, -2);
             lua_call(L, 1, 1);
         }
@@ -185,7 +160,7 @@ static int wl_expert_register_field_array(lua_State *L)
 
 /***
  * Add an expert info
- * @function add_info
+ * @function expert_add_info
  * @tparam ProtoInfo pinfo the pinfo object
  * @tparam ProtoItem pi the proto_item object
  * @tparam ExpertRegisterInfo ei the expert info object
@@ -202,7 +177,7 @@ static int wl_expert_add_info(lua_State *L)
 
 /***
  * Add an expert info with a format string
- * @function add_info_format
+ * @function expert_add_info_format
  * @tparam ProtoInfo pinfo the pinfo object
  * @tparam ProtoItem pi the proto_item object
  * @tparam EiRegisterInfo ei the expert info object
@@ -235,7 +210,6 @@ static const struct luaL_Reg wl_expert_register_info_m[] = {
 };
 
 static const struct luaL_Reg wl_expert_f[] = {
-    { "new_expert_register_info", wl_new_expert_register_info },
     { "expert_register_protocol", wl_expert_register_protocol },
     { "expert_register_field_array", wl_expert_register_field_array },
     { "expert_add_info", wl_expert_add_info },
