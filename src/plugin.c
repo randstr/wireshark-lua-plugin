@@ -21,10 +21,22 @@
 
 #include <epan/epan.h>
 #include <ws_version.h>
-#include <wsutil/plugins.h>
 #include "wslua.h"
 
-static void plugin_register(void)
+#define DLL_PUBLIC __attribute__((visibility ("default")))
+
+
+DLL_PUBLIC
+const char plugin_version[] = PLUGIN_VERSION;
+
+DLL_PUBLIC
+const int plugin_want_major = WIRESHARK_VERSION_MAJOR;
+
+DLL_PUBLIC
+const int plugin_want_minor = WIRESHARK_VERSION_MINOR;
+
+DLL_PUBLIC
+void plugin_register(void)
 {
     static epan_plugin plug = {
         .init = wslua2_init,
@@ -38,14 +50,3 @@ static void plugin_register(void)
     };
     epan_register_plugin(&plug);
 }
-
-static struct ws_module module = {
-    .flags = WS_PLUGIN_DESC_EPAN,
-    .version = PLUGIN_VERSION,
-    .spdx_id = "GPL-2.0-or-later",
-    .home_url = "https://gitlab.com/jvalverde/wireshark-lua-plugin",
-    .blurb = "Allows writing Wireshark dissectors in Lua 5.4 instead of C.",
-    .register_cb = &plugin_register,
-};
-
-WIRESHARK_PLUGIN_REGISTER_EPAN(&module, 0)
