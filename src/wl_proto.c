@@ -345,7 +345,7 @@ static int wl_prototree_add_item_ret(lua_State *L)
     enum ftenum type = hf->hfinfo.type;
 
     if (type == FT_BOOLEAN) { 
-        bool retval;
+        gboolean retval;
         item = proto_tree_add_item_ret_boolean(tree, *(hf->p_id), tvb, off->curr, length, encoding, &retval);
         lua_pushboolean(L, retval);
     }

@@ -27,7 +27,7 @@ struct wl_preference {
     char *description;
     unsigned type;
     union {
-        bool boolean;
+        gboolean boolean;
     } value;
 };
 

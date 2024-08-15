@@ -21,7 +21,6 @@
 
 #include <epan/epan.h>
 #include <ws_version.h>
-#include <wsutil/plugins.h>
 #include "wslua.h"
 
 #define DLL_PUBLIC __attribute__((visibility ("default")))
@@ -49,10 +48,4 @@ void plugin_register(void)
         .register_all_handoffs = wslua2_register_all_handoffs,
     };
     epan_register_plugin(&plug);
-}
-
-DLL_PUBLIC
-uint32_t plugin_describe(void)
-{
-    return WS_PLUGIN_DESC_EPAN;
 }
