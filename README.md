@@ -26,7 +26,7 @@ Goals for the project include:
 
 Non-goals are backward compatibility and one-to-one feature parity.
 
-## Installing from source
+## Building from source
 
 ### Binary and source compatibility
 
@@ -59,7 +59,7 @@ Check the [Wireshark Developer's Guide](https://www.wireshark.org/docs/wsdg_html
 for detailed instructions on how to build Wireshark itself. Note that header
 installation is a separate install step and it is required to build any Wireshark plugin.
 
-### Building the Wireshark Lua Plugin
+### Building the plugin
 
 From the plugin source directory run:
 
@@ -86,6 +86,22 @@ To install the plugin on the system (may need to use sudo):
 ```sh
 make install
 ```
+
+## Manual installation of binary plugin
+
+If you are not building from source you need to copy the plugin file
+(with extension `.dll` on Windows or `.so` on Linux) to the Wireshark
+[personal plugin folder](https://www.wireshark.org/docs/wsug_html_chunked/ChPluginFolders.html).
+The following table lists the personal plugin folder per platform:
+
+| Platform    | Plugin folder |
+| ----------- | ---- |
+| Windows     | `%APPDATA%\Wireshark\plugins\X.Y\epan`           |
+| Unix-like   | `$HOME/.local/lib/wireshark/plugins/X.Y/epan`    |
+
+Where X.Y is the major.minor Wireshark version for the release you are
+installing for (so the the last component Z in the complete X.Y.Z version number
+is not used).
 
 ## Loading Lua scripts
 
